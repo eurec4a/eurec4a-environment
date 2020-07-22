@@ -8,7 +8,7 @@ the atmospheric environment during the EUREC4A field campaign.
 ## Column-based scalars
 (could be averaged over flight, full-circle, single sounding etc)
 
-| variable | short-hand | definition | data sources |
+| variable | description | definition | data sources |
 | --- | --- | --- | --- |
 | h_BL | boundary layer depth | numerous definitions (**add links**) | thermodynamic profiles |
 | h_CB | cloud-base height | numerous definitions (**add links**) | thermodynamic profiles |
