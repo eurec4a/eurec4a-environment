@@ -25,7 +25,7 @@ the atmospheric environment during the EUREC4A field campaign.
 | variable | short-hand | observation sources |
 | --- | --- | --- |
 | qt(z) | total water vertical profile | HALO dropsondes, ... |
-| dQdt_r(z) | radiative cooling profiles | radiative transfer calculations based on moisture and temperature profiles (**add links**) |
+| dQdt_r(z) | radiative cooling profiles | radiative transfer calculations based on moisture and temperature profiles (`Products/Radiative Profiles/all_rad_profiles.nc` on AERIS) |
 | theta_v(z) | virtual potential temperature profile | HALO dropsondes, ... |
 | u(z) | zonal wind profile | HALO dropsondes? |
 | v(z) | meridonal wind profile | HALO dropsondes? |
