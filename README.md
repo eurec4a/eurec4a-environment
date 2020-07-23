@@ -15,7 +15,8 @@ the atmospheric environment during the EUREC4A field campaign.
 | SST | sea surface temperature | - | ship observations (?), ERA reanalysis | |
 | EIS | estimated inversion strength | ? | thermodynamic profiles | |
 | LTS | lower tropospheric stability | ? | thermodynamic profiles | |
-| FT humidity | ? | ? | ? | |
+| PW | precipitable water | ? | thermodynamic profiles | |
+| FT humidity | free tropospheric humidity | ? | thermodynamic profiles | |
 | "wind speed" | lower tropospheric wind magnitude? | - | horizontal wind profiles | |
 | "wind shear" | lower tropospheric wind shear magnitude? | - | horizontal wind profiles | |
 | z_INV | "inversion height" (multiple?) | ? | thermodynamic profiles | |
@@ -27,9 +28,10 @@ the atmospheric environment during the EUREC4A field campaign.
 
 | variable | short-hand | observation sources |
 | --- | --- | --- |
-| qt(z) | total water vertical profile | HALO dropsondes, ... |
+| qt(z) | total water vertical profile | JOANNE + radiosondes |
 | dQdt_r(z) | radiative cooling profiles | radiative transfer calculations based on moisture and temperature profiles (`Products/Radiative Profiles/all_rad_profiles.nc` on AERIS) |
-| theta_v(z) | virtual potential temperature profile | HALO dropsondes, ... |
-| u(z) | zonal wind profile | HALO dropsondes? |
-| v(z) | meridonal wind profile | HALO dropsondes? |
-| w(z) | vertical wind profile | HALO dropsondes? |
+| theta_v(z) | virtual potential temperature profile | JOANNE + radiosondes |
+| u(z) | zonal wind profile | JOANNE + radiosondes, wind lidars |
+| v(z) | meridonal wind profile | JOANNE + radiosondes, wind lidars |
+| w(z) | vertical wind profile | Lidars, radars (?) |
+| W(z) | large-scale vertical velocity profile | JOANNE |
