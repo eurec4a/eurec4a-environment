@@ -23,6 +23,9 @@ the atmospheric environment during the EUREC4A field campaign.
 | ? | "mesoscale organisation category" | fish/flower/sugar/gravel | satellite observations | |
 | I_org | mesoscale organisation | Tompkins & Semie 2017 | thresholded cloud-field measurement, for example cloud-top height | https://github.com/leifdenby/convorg |
 | SCAI | mesoscale organisation | Tobin et al 2012 | thresholded cloud-field measurement, for example cloud-top height | https://github.com/leifdenby/convorg |
+| LHF | latent heat flux | Modified COARE algorithm | thermodynamic profiles + surface instruments | |
+| SHF | sensible heat flux | Modified COARE algorithm | thermodynamic profiles + surface instruments | |
+| SBF | surface buoyancy flux | Modified COARE algorithm | thermodynamic profiles + surface instruments | |
 
 ## Profile variables
 
