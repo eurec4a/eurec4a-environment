@@ -8,17 +8,20 @@ the atmospheric environment during the EUREC4A field campaign.
 ## Column-based scalars
 (could be averaged over flight, full-circle, single sounding etc)
 
-| variable | description | definition | data sources |
-| --- | --- | --- | --- |
-| h_BL | boundary layer depth | numerous definitions (**add links**) | thermodynamic profiles |
-| h_CB | cloud-base height | numerous definitions (**add links**) | thermodynamic profiles |
-| SST | sea surface temperature | - | ship observations (?), ERA reanalysis |
-| EIS | estimated inversion strength | ? | thermodynamic profiles |
-| LTS | lower tropospheric stability | ? | thermodynamic profiles |
-| FT humidity | ? | ? | ? |
-| "wind speed" | lower tropospheric wind magnitude? | - | horizontal wind profiles |
-| "wind shear" | lower tropospheric wind shear magnitude? | - | horizontal wind profiles |
-| z_INV | "inversion height" (multiple?) | ? | thermodynamic profiles |
+| variable | description | definition | data sources | implementation |
+| --- | --- | --- | --- | --- |
+| h_BL | boundary layer depth | numerous definitions (**add links**) | thermodynamic profiles | |
+| h_CB | cloud-base height | numerous definitions (**add links**) | thermodynamic profiles | |
+| SST | sea surface temperature | - | ship observations (?), ERA reanalysis | |
+| EIS | estimated inversion strength | ? | thermodynamic profiles | |
+| LTS | lower tropospheric stability | ? | thermodynamic profiles | |
+| FT humidity | ? | ? | ? | |
+| "wind speed" | lower tropospheric wind magnitude? | - | horizontal wind profiles | |
+| "wind shear" | lower tropospheric wind shear magnitude? | - | horizontal wind profiles | |
+| z_INV | "inversion height" (multiple?) | ? | thermodynamic profiles | |
+| ? | "mesoscale organisation category" | fish/flower/sugar/gravel | satellite observations | |
+| I_org | mesoscale organisation | Tompkins & Semie 2017 | thresholded cloud-field measurement, for example cloud-top height | https://github.com/leifdenby/convorg |
+| SCAI | mesoscale organisation | Tobin et al 2012 | thresholded cloud-field measurement, for example cloud-top height | https://github.com/leifdenby/convorg |
 
 ## Profile variables
 
