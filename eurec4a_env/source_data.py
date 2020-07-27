@@ -34,9 +34,9 @@ def _download_file(url, block_size=8192):
     Based on https://stackoverflow.com/a/16696317/271776 and
     https://stackoverflow.com/a/37573701/271776
     """
-    local_filename = url.split('/')[-1]
+    local_filename = url.split("/")[-1]
     if "=" in local_filename:
-        local_filename = local_filename.split('=')[-1]
+        local_filename = local_filename.split("=")[-1]
 
     # put files in data/ locally
     local_filename = Path("data") / local_filename
@@ -47,9 +47,9 @@ def _download_file(url, block_size=8192):
         raise Exception
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
-            total_size_in_bytes = int(r.headers.get('content-length', 0))
-            progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
-            with open(local_filename, 'wb') as f:
+            total_size_in_bytes = int(r.headers.get("content-length", 0))
+            progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+            with open(local_filename, "wb") as f:
                 for chunk in r.iter_content(block_size):
                     progress_bar.update(len(chunk))
                     f.write(chunk)
@@ -64,7 +64,8 @@ def open_joanne_dataset(level=3):
     if not level == 3:
         raise NotImplementedError(level)
     filename = _download_file(JOANNE_LEV3_URL)
-    return xr.open_dataset(filename)
+    ds = xr.open_dataset(filename)
+    return ds.sortby("launch_time")
 
 
 def _open_halo_decomp_dataset(date):
@@ -103,6 +104,6 @@ def get_halo_flight_legs(legtype="all"):
 
         if len(dss_segments) > 0:
             ds_flight = xr.concat(dss_segments, dim="segment")
-            ds_flight['flight_num'] = flightinfo["name"]
+            ds_flight["flight_num"] = flightinfo["name"]
             datasets.append(ds_flight)
-    return xr.concat(datasets, dim='segment')
+    return xr.concat(datasets, dim="segment")
