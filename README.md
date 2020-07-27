@@ -5,6 +5,8 @@ the atmospheric environment during the EUREC4A field campaign.
 
 # Variables, definitions and source data
 
+> **NOTE**: The tables below are likely out-of-date (but will be updated at the end of the hackathon), see the [project document](https://docs.google.com/document/d/17zO3mNVzYluToaUERtfwHpta0YG_HF_Zpyul8ldbhXY/edit#) for a more up-to-date list and discussion.
+
 ## Column-based scalars
 (could be averaged over flight, full-circle, single sounding etc)
 
