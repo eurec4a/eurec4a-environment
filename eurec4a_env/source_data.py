@@ -99,7 +99,6 @@ def get_halo_flight_legs(legtype="all"):
             ds_segment = xr.Dataset(coords=dict(segment=segment["segment_id"]))
             for v in segment_variables_to_keep:
                 ds_segment[v] = segment[v]
-            print(ds_segment)
             dss_segments.append(ds_segment)
 
         if len(dss_segments) > 0:
