@@ -44,7 +44,7 @@ def _download_file(url, block_size=8192):
     if Path(local_filename).exists():
         pass
     else:
-        raise Exception
+        local_filename.parent.mkdir(exist_ok=True, parents=True)
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
             total_size_in_bytes = int(r.headers.get("content-length", 0))
