@@ -1,6 +1,6 @@
 # Characterising the EUREC4A field campaign environment
 
-![eurec4a_env](https://github.com/eurec4a/eurec4a-environment/workflows/eurec4a_env/badge.svg)
+![eurec4a_environment](https://github.com/eurec4a/eurec4a-environment/workflows/eurec4a_environment/badge.svg)
 
 The aim of this git repository is collect tools and ideas for characterising
 the atmospheric environment during the EUREC4A field campaign.

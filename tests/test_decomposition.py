@@ -1,5 +1,5 @@
-from eurec4a_env.decomposition import time as time_decomposition
-from eurec4a_env.source_data import open_joanne_dataset
+from eurec4a_environment.decomposition import time as time_decomposition
+from eurec4a_environment.source_data import open_joanne_dataset
 
 
 def test_time_decomposition():
