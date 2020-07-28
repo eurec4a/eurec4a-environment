@@ -5,11 +5,56 @@
 The aim of this git repository is collect tools and ideas for characterising
 the atmospheric environment during the EUREC4A field campaign.
 
-# Variables, definitions and source data
+See below for how to [work with the module](#working-with-eurec4a_environment)
+or the [list of variables](#variables-definitions-and-source-data) that are (being) implemented
+
+## Working with `eurec4a_environment`
+
+Depending on whether you want to a) just use the module or b) contribute
+to it you can either install with `pip` directly or check out a copy
+locally and make that available in your `PYTHONPATH`
+
+### a) Installing with pip
+
+`eurec4a_environment` isn't yet on pipy, but you can install it directly
+from github:
+
+```bash
+pip install git+https://https://github.com/eurec4a/eurec4a-environment#egg=eurec4a_environment
+```
+
+### b) Cloning and using a local copy
+
+To develop on `eurec4a_environment` you'll need to make a local copy by cloning
+this repository. The best thing is to create your own fork first (so you can
+push your branches to there and make pull-requests from there) and then clone
+that
+
+1. [Create your own fork](https://github.com/eurec4a/eurec4a-environment/fork) of `eurec4a_environment`
+
+2. Clone your fork to your local computer
+
+```bash
+$> git clone https://github.com/{your-github-username}/eurec4a-environment
+```
+
+3. Install your local copy with pip in [developer
+   mode](https://setuptools.readthedocs.io/en/latest/setuptools.html?highlight=development%20mode#development-mode)
+   (so that any changes you make to the source-code locally will be available
+   when you import `eurec4a_environment`). Make sure to have the python
+   environment active that you want to install this module into:
+
+```bash
+$> cd eurec4a-environment
+$> pip install --editable .
+```
+
+
+## Variables, definitions and source data
 
 > **NOTE**: The tables below are likely out-of-date (but will be updated at the end of the hackathon), see the [project document](https://docs.google.com/document/d/17zO3mNVzYluToaUERtfwHpta0YG_HF_Zpyul8ldbhXY/edit#) for a more up-to-date list and discussion.
 
-## Column-based scalars
+### Column-based scalars
 (could be averaged over flight, full-circle, single sounding etc)
 
 | variable | description | definition | data sources | implementation |
@@ -31,7 +76,7 @@ the atmospheric environment during the EUREC4A field campaign.
 | SHF | sensible heat flux | Modified COARE algorithm | thermodynamic profiles + surface instruments | |
 | SBF | surface buoyancy flux | Modified COARE algorithm | thermodynamic profiles + surface instruments | |
 
-## Profile variables
+### Profile variables
 
 | variable | short-hand | observation sources |
 | --- | --- | --- |
