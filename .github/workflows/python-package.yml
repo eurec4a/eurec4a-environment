@@ -1,4 +1,4 @@
-name: eurec4a_env
+name: eurec4a_environment
 
 on:
   push:
