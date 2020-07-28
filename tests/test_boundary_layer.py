@@ -2,8 +2,8 @@ import numpy as np
 import xarray as xr
 
 
-from eurec4a_env.variables import boundary_layer
-from eurec4a_env.constants import cp_d, g
+from eurec4a_environment.variables import boundary_layer
+from eurec4a_environment.constants import cp_d, g
 
 
 def test_LCL_Bolton():

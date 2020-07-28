@@ -1,0 +1,2 @@
+include versioneer.py
+include eurec4a_environment/_version.py
