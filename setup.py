@@ -5,7 +5,7 @@ import versioneer
 INSTALL_REQUIRES = ["xarray", "netcdf4", "typhon", "tqdm"]
 
 setup(
-    name="intake-xarray",
+    name="eurec4a-environment",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="tools for characterising the atmospheric environment during EUREC4A",
