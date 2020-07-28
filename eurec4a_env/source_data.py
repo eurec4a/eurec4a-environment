@@ -13,10 +13,12 @@ HALO_FLIGHT_DECOMP_DATE_FORMAT = "%Y%m%d"
 HALO_FLIGHT_DECOMP_URL = "https://raw.githubusercontent.com/eurec4a/halo-flight-phase-separation/master/flight_phase_files/EUREC4A_HALO_Flight-Segments_{date}_v1.0.yaml"
 
 HALO_FLIGHT_DAYS = [
+    "2020-01-19",
     "2020-01-22",
     "2020-01-24",
     "2020-01-26",
     "2020-01-28",
+    "2020-01-30",
     "2020-01-31",
     "2020-02-02",
     "2020-02-05",
