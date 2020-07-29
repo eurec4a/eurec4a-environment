@@ -122,9 +122,11 @@ def scalar(
     method = getattr(np, cell_method)
 
     if cell_type == "bin":
-        scalar = method(profile.sel(height=slice(level - lower, level + upper)))
+        scalar = method(
+            profile.sel(height=slice(level_value - lower, level_value + upper))
+        )
     elif cell_type == "point":
-        scalar = method(profile.sel(height=level))
+        scalar = method(profile.sel(height=level_value))
 
     return scalar
 
