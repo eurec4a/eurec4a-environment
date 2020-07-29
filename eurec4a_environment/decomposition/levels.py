@@ -10,6 +10,7 @@ from tqdm import tqdm
 ######################################################
 default_functions = {
     "near_surface": "default_function_here",
+    "lcl": "default_function_here",
     "mixed_layer": "default_function_here",
     "cloud_layer": "default_function_here",
     "inversion": "default_function_here",
@@ -31,6 +32,7 @@ dictionary_of_functions_here = {
 
 level_functions = {
     "near_surface": dictionary_of_functions_here,
+    "lcl": dictionary_of_functions_here,
     "mixed_layer": dictionary_of_functions_here,
     "cloud_layer": dictionary_of_functions_here,
     "inversion": dictionary_of_functions_here,
