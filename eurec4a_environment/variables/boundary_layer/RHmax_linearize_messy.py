@@ -1,27 +1,29 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 29 16:13:02 2020
+
+Messy for now ... will have to be broken into individual parts as Leif as done with his refactoring
+"""
+
+#%%
+import os
+import xarray as xr
+
+# load JOANNE dropsondes
+input_dir = "/Users/annaleaalbright/Dropbox/EUREC4A/Dropsondes/Data/"
+fp_dropsondes = os.path.join(
+    input_dir, "EUREC4A_JOANNE_Dropsonde-RD41_Level_3_v0.5.7-alpha+0.g45fe69d.dirty.nc"
+)
+all_sondes = xr.open_dataset(fp_dropsondes)
+# all_sondes = xr.open_dataset(fp_dropsondes).swap_dims({"sounding": "launch_time"})
+
+#%%
+
 import numpy as np
 import xarray as xr
 from scipy.signal import find_peaks
 import statsmodels.api as sm
-
-
-def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
-    """
-    Calculate height at maximum relative humidity values
-    """
-    ds_mixed_layer = ds.sel({altitude: slice(z_min, z_max)})
-
-    da_rh = ds_mixed_layer[rh]
-    dims = list(ds.dims.keys())
-    # drop the height coord
-    del dims[dims.index(altitude)]
-
-    peakRH_idx = da_rh.argmax(dim=altitude)
-    da = da_rh.isel({altitude: peakRH_idx})[altitude]
-
-    da.attrs["long_name"] = "mixed layer height (from RH peak)"
-    da.attrs["units"] = "m"
-
-    return da
 
 
 def calc_peakRH_linearize(
@@ -93,3 +95,42 @@ def calc_peakRH_linearize(
     da.attrs["long_name"] = "mixed layer height (from RH peak and linearization)"
     da.attrs["units"] = "m"
     return da
+
+
+#%% callfunction
+
+z_peakRH_linfit = calc_peakRH_linearize(
+    all_sondes,
+    altitude="height",
+    rh="rh",
+    time_dim="sounding",
+    z_min=200.0,
+    z_max=900.0,
+    z_min_lin=50.0,
+    z_max_lin=200.0,
+)
+
+#%% basic plots
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+sns.set(
+    context="notebook",
+    style="whitegrid",
+    palette="deep",
+    font="sans-serif",
+    font_scale=2,
+    color_codes=True,
+    rc=None,
+)
+plt.figure(figsize=(15, 10))
+sns.distplot(z_peakRH_linfit)
+plt.ylabel("pdf")
+plt.xlabel("mixed layer height from RHmax linearize (m)")
+
+plt.figure(figsize=(15, 10))
+plt.scatter(np.arange(len(z_peakRH_linfit)), z_peakRH_linfit)
+plt.xlabel("sonde number")
+plt.ylabel("mixed layer height from RHmax linearize (m)")
