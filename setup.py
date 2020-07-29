@@ -2,7 +2,14 @@
 from setuptools import setup, find_packages
 import versioneer
 
-INSTALL_REQUIRES = ["xarray", "netcdf4", "typhon", "tqdm"]
+INSTALL_REQUIRES = [
+    "xarray",
+    "netcdf4",
+    "typhon",
+    "tqdm",
+    "requests",
+    "pyyaml",
+]
 
 setup(
     name="eurec4a-environment",
