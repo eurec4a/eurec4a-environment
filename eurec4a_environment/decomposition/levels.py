@@ -82,43 +82,39 @@ def scalar(
             f"{err} : This is not recognised as a level definition. Definitions available for {level_name} are {list(level_functions[level_name].keys)}"
         )
         return
-    else :
+    else:
         level_value = level_functions[level_name][level_definition]()
 
-
     if cell_type == "bin":
-        if bounds is None :
+        if bounds is None:
             if upper is None or lower is None:
                 raise Exception(
                     "if cell_type is bin, you must specify either upper and lower limits or provide bounds as a single value"
                 )
-                return 
+                return
             elif upper <= 0 or lower <= 0:
                 raise Exception(
                     "upper and lower bounds for a cell have to be positive values"
                 )
                 return
-            else :
+            else:
                 upper = level_value + upper
                 lower = level_value - lower
 
-        elif bounds is not None :
-            
+        elif bounds is not None:
+
             if upper is not None or lower is not None:
                 raise Exception(
                     "either provide the upper and lower limits or provide bounds as a single values"
                 )
                 return
-            else :
+            else:
                 upper = level_value + bounds
                 lower = level_value - bounds
-        else :
-            
+
     if cell_type == "point":
         if bounds is not None or upper is not None or lower is not None:
-            raise Exception(
-                "if cell type is point, there can be no specified bounds"
-            )
+            raise Exception("if cell type is point, there can be no specified bounds")
 
     if drop_na is True:
         cell_method = "nan" + cell_method
