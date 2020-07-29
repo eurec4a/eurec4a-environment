@@ -42,6 +42,10 @@ def estimate_level():  # Temporary function till actual functions are linked in 
     return 700
 
 
+def pass_through_tests():
+    return
+
+
 def scalar(
     profile,
     level_name,  # e.g. "mixed_layer","near_surface"
@@ -65,15 +69,15 @@ def scalar(
         default_functions[level_name]
     except KeyError as err:
         print(
-            f"{err} : This level is not currently included. Do you want to use custom_level instead?"
+            f"{err} : This level_name is not valid. Do you want to use custom_level instead?"
         )
         return
 
     try:
-        level_functions[level_name]
+        level_functions[level_name][level_definition]
     except KeyError as err:
         print(
-            f"{err} : This level is not currently included. Do you want to use custom_level instead?"
+            f"{err} : This is not recognised as a level definition. Definitions available for {level_name} are {list(level_functions[level_name].keys)}"
         )
         return
 
