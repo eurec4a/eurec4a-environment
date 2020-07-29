@@ -1,6 +1,6 @@
 # %% IMPORTING MODULES
 ######################################################
-
+import sys
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -16,6 +16,18 @@ default_functions = {
     "free_lower_troposphere": "default_function_here",
     "middle_troposphere": "default_function_here",
     "upper_troposphere": "default_function_here",
+}
+
+list_of_functions_here = []  # temporary filler till actual functions are linked
+
+level_functions = {
+    "near_surface": [list_of_functions_here],
+    "mixed_layer": [list_of_functions_here],
+    "cloud_layer": [list_of_functions_here],
+    "inversion": [list_of_functions_here],
+    "free_lower_troposphere": [list_of_functions_here],
+    "middle_troposphere": [list_of_functions_here],
+    "upper_troposphere": [list_of_functions_here],
 }
 
 # %% TEMPLATE FUNCTION
@@ -45,8 +57,21 @@ def scalar(
 
     level_value = estimate_level()
 
-    if level_name not in default_functions:
-        raise Exception("This level is not currently included")
+    try:
+        default_functions[level_name]
+    except KeyError as err:
+        print(
+            f"{err} : This level is not currently included. Do you want to use custom_level instead?"
+        )
+        return
+
+    try:
+        default_functions[level_name]
+    except KeyError as err:
+        print(
+            f"{err} : This level is not currently included. Do you want to use custom_level instead?"
+        )
+        return
 
     if drop_na is True:
         cell_method = "nan" + cell_method
