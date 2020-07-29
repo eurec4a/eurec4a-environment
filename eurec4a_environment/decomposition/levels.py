@@ -80,24 +80,43 @@ def scalar(
             f"{err} : This is not recognised as a level definition. Definitions available for {level_name} are {list(level_functions[level_name].keys)}"
         )
         return
+    else :
+        level_value = level_functions[level_name][level_definition]()
+
 
     if cell_type == "bin":
-        if upper is None or lower is None:
-            raise Exception(
-                "if cell_type is bin, you must specify upper and lower bounds"
-            )
-        elif upper <= 0 or lower <= 0:
-            raise Exception(
-                "upper and lower bounds for a cell have to be positive values"
-            )
+        if bounds is None :
+            if upper is None or lower is None:
+                raise Exception(
+                    "if cell_type is bin, you must specify either upper and lower limits or provide bounds as a single value"
+                )
+                return 
+            elif upper <= 0 or lower <= 0:
+                raise Exception(
+                    "upper and lower bounds for a cell have to be positive values"
+                )
+                return
+            else :
+                upper = level_value + upper
+                lower = level_value - lower
 
+        elif bounds is not None :
+            
+            if upper is not None or lower is not None:
+                raise Exception(
+                    "either provide the upper and lower limits or provide bounds as a single values"
+                )
+                return
+            else :
+                upper = level_value + bounds
+                lower = level_value - bounds
+        else :
+            
     if cell_type == "point":
-        if upper is not None or lower is not None:
+        if bounds is not None or upper is not None or lower is not None:
             raise Exception(
-                "if cell type is point, there can be no specified upper and lower bounds"
+                "if cell type is point, there can be no specified bounds"
             )
-
-    level_value = level_functions[level_name][level_definition]()
 
     if drop_na is True:
         cell_method = "nan" + cell_method
@@ -105,7 +124,7 @@ def scalar(
     method = getattr(np, cell_method)
 
     if cell_type == "bin":
-        scalar = method(profile.sel(height=slice(lower, upper)))
+        scalar = method(profile.sel(height=slice(level - lower, level + upper)))
     elif cell_type == "point":
         scalar = method(profile.sel(height=level))
 
