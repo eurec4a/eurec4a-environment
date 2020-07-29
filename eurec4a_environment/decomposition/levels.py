@@ -18,8 +18,13 @@ default_functions = {
     "upper_troposphere": "default_function_here",
 }
 
+
+def estimate_level():  # Temporary function till actual functions are linked in to default_functions dictionary
+    return 700
+
+
 dictionary_of_functions_here = {
-    "max_RH": "function_here",
+    "max_RH": estimate_level,
     "max_thetav_gradient": "function_here",
     "and_so_on": "for_individual_levels",
 }  # temporary example filler till actual functions are linked
@@ -38,10 +43,6 @@ level_functions = {
 ######################################################
 
 
-def estimate_level():  # Temporary function till actual functions are linked in to default_functions dictionary
-    return 700
-
-
 def pass_through_tests():
     return
 
@@ -52,8 +53,9 @@ def scalar(
     dim="height",  # Could also be "pressure"
     level_definition="default",  # preferred definition of the level (default value provided for all level_names)
     cell_type="bin",  # bin or point
-    upper=50,  # in meter / Pa
-    lower=50,  # in meter / Pa
+    bounds=None,  # in case the upper and lower bounds are the same; in m / Pa
+    upper=None,  # in m / Pa
+    lower=None,  # in m / Pa
     cell_method="mean",
     drop_na=True,
 ):
@@ -62,8 +64,6 @@ def scalar(
     User can specify by which definition they want the level to be calculated. Ideally, the profile is provided
     as a DataArray with altitude as dimension. 
     """
-
-    level_value = estimate_level()
 
     try:
         default_functions[level_name]
@@ -81,6 +81,24 @@ def scalar(
         )
         return
 
+    if cell_type == "bin":
+        if upper is None or lower is None:
+            raise Exception(
+                "if cell_type is bin, you must specify upper and lower bounds"
+            )
+        elif upper <= 0 or lower <= 0:
+            raise Exception(
+                "upper and lower bounds for a cell have to be positive values"
+            )
+
+    if cell_type == "point":
+        if upper is not None or lower is not None:
+            raise Exception(
+                "if cell type is point, there can be no specified upper and lower bounds"
+            )
+
+    level_value = level_functions[level_name][level_definition]()
+
     if drop_na is True:
         cell_method = "nan" + cell_method
 
@@ -93,5 +111,12 @@ def scalar(
 
     return scalar
 
+
+# %% TO DO LIST
+######################################################
+
+# 1. Link functions to estimate the vertical levels
+# 2. Include space for arguments needed for functions mentioned in 1. to work
+# 3. Include all tests as part of a different function and keep 'scalar' clean
 
 # %%
