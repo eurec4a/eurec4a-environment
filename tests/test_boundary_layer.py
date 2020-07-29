@@ -1,5 +1,7 @@
+import numpy as np
+
+
 from eurec4a_environment.variables import boundary_layer
-from eurec4a_environment.source_data import open_joanne_dataset
 
 
 def test_LCL_Bolton(ds_isentropic_test_profiles):
@@ -9,10 +11,13 @@ def test_LCL_Bolton(ds_isentropic_test_profiles):
     assert da_lcl.mean() < 2000.0
 
 
-def test_mixed_layer_height_RHmax():
-    ds = open_joanne_dataset()
-    da_lcl = boundary_layer.mixed_layer_height.calc_peak_RH(
-        ds=ds, altitude="height", rh="rh"
+def test_mixed_layer_height_RHmax(ds_isentropic_test_profiles):
+    ds = ds_isentropic_test_profiles
+    # set the RH profile so we know where the peak should be
+    z0 = 600.
+    z = ds.alt
+    ds['rh'] = 1.0 - np.maximum(np.abs(z0 - z), 0) / z0
+    da_rh_peak = boundary_layer.mixed_layer_height.calc_peak_RH(
+        ds=ds, altitude="alt", rh="rh"
     )
-    assert da_lcl.mean() > 0.0
-    assert da_lcl.mean() < 2000.0
+    assert np.allclose(da_rh_peak, z0)

@@ -1,6 +1,3 @@
-import xarray as xr
-
-
 def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
     """
     Calculate height at maximum relative humidity values
@@ -13,9 +10,8 @@ def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
     del dims[dims.index(altitude)]
 
     peakRH_idx = da_rh.argmax(dim=altitude)
-    h_peakRH = ds[altitude].isel({altitude: peakRH_idx})
+    da = da_rh.isel({altitude: peakRH_idx})[altitude]
 
-    da = xr.DataArray(h_peakRH, dims=dims, coords={d: ds[d] for d in dims})
     da.attrs["long_name"] = "mixed layer height (from RH peak)"
     da.attrs["units"] = "m"
 
