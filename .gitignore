@@ -3,3 +3,4 @@
 .DS_Store
 *.nc
 data/
+eurec4a_environment.egg-info/
