@@ -23,7 +23,7 @@ import xarray as xr
 from scipy.signal import find_peaks
 import statsmodels.api as sm
 
-def calc_peakRH_linearize(ds, altitude, rh, time_dim, z_min, z_max, z_min_lin, z_max_lin):
+def calc_peakRH_linearize(ds, altitude="height", rh="rh", time_dim="sounding", z_min, z_max, z_min_lin, z_max_lin):
      """
      Calculate maximum in relative humidity (RH) profile that minimizes difference between 
      observed RH profile and RH profile linearized around lower levels (i.e. 200-400m). 
