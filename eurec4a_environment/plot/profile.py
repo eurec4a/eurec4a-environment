@@ -21,13 +21,21 @@ def profile_plot_2D(
     variable,
     ax=None,
     y="alt",
-    height_labels=None,
+    x="launch_time",
     cbar_label=None,
-    cm="viridis",
+    height_labels=None,
+    height_labels_color="green",
     **kwargs
 ):
-    # ensure we have time as a coordinate
-    time = "launch_time"
+
+    """Plot a 2D (default time-height) plot and optionally another height level as scatter points
+
+    **kwargs: Additional keyword arguments passed to
+            :func:`matplotlib.pyplot.contourf`.
+    """
+
+    # ensure we have x (default launch time) as a coordinate
+    time = x
     org_dim = None
     try:
         ds.isel(**{time: 0})
@@ -36,23 +44,34 @@ def profile_plot_2D(
         ds = ds.swap_dims({org_dim: time})
 
     var = ds[variable]
-
     varh = ds[height_labels]
-    # var = ds[var_str].resample(launch_time=freq).mean(dim=time)
+
+    # Plot
     fig, ax = plt.subplots(figsize=(20, 10))
-    the_fig = var.plot.contourf(
-        ax=ax, y=y, levels=10, cmap=cm, add_colorbar=False, robust=True
+    var.plot.contourf(
+        ax=ax,
+        x=x,
+        y=y,
+        add_colorbar=True,
+        robust=True,
+        cbar_kwargs=dict(label=cbar_label),
+        **kwargs
     )
-    varh.plot(linestyle="None", marker="p", color="green", label=height_labels)
-    ax.set_ylim(0, 18000)
-    myFmt = mdates.DateFormatter("%m-%d")
-    ax.xaxis.set_major_formatter(myFmt)
-    fig.colorbar(the_fig, label=cbar_label)
-    ax.set_xlabel("time")
-    ax.set_ylabel("height / m")
+    varh.plot(
+        ax=ax,
+        linestyle="None",
+        marker="p",
+        color=height_labels_color,
+        label=height_labels,
+    )
+    if x == "launch_time":
+        ax.set_xlabel("time")
+        myFmt = mdates.DateFormatter("%m-%d")
+        ax.xaxis.set_major_formatter(myFmt)
+    if y == "alt":
+        ax.set_ylim(0, 18000)
+        ax.set_ylabel("height / m")
     ax.legend()
-    ax.xaxis.set_major_formatter(myFmt)
-    fig.autofmt_xdate()
-    ax.autoscale_view()
-    plt.tight_layout()
-    fig.savefig("ProfilePlot2D_{}.pdf".format(variable), bbox_inches="tight")
+    plt.close()
+    return fig
+    # fig.savefig("ProfilePlot2D_{}.pdf".format(variable), bbox_inches="tight")
