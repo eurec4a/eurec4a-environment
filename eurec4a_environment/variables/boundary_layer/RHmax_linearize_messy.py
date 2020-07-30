@@ -3,20 +3,19 @@
 """
 Created on Wed Jul 29 16:13:02 2020
 
-Messy for now ... will have to be broken into individual parts as Leif as done with his refactoring
 """
 
 #%%
-import os
-import xarray as xr
-
+#import os
+#import xarray as xr
+#
 # load JOANNE dropsondes
 input_dir = "/Users/annaleaalbright/Dropbox/EUREC4A/Dropsondes/Data/"
 fp_dropsondes = os.path.join(
     input_dir, "EUREC4A_JOANNE_Dropsonde-RD41_Level_3_v0.5.7-alpha+0.g45fe69d.dirty.nc"
 )
 all_sondes = xr.open_dataset(fp_dropsondes)
-# all_sondes = xr.open_dataset(fp_dropsondes).swap_dims({"sounding": "launch_time"})
+all_sondes = xr.open_dataset(fp_dropsondes).swap_dims({"sounding": "launch_time"})
 
 #%%
 
