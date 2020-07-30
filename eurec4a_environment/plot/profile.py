@@ -43,11 +43,11 @@ def profile_plot_2D(
         org_dim = ds[time].dims[0]
         ds = ds.swap_dims({org_dim: time})
 
-    var = ds[variable]
-    varh = ds[height_labels]
-
     # Plot
     fig, ax = plt.subplots(figsize=(20, 10))
+
+    var = ds[variable]
+
     var.plot.contourf(
         ax=ax,
         x=x,
@@ -57,13 +57,18 @@ def profile_plot_2D(
         cbar_kwargs=dict(label=cbar_label),
         **kwargs
     )
-    varh.plot(
-        ax=ax,
-        linestyle="None",
-        marker="p",
-        color=height_labels_color,
-        label=height_labels,
-    )
+
+    if height_labels == True:
+        varh = ds[height_labels]
+
+        varh.plot(
+            ax=ax,
+            linestyle="None",
+            marker="p",
+            color=height_labels_color,
+            label=height_labels,
+        )
+        ax.legend()
     if x == "launch_time":
         ax.set_xlabel("time")
         myFmt = mdates.DateFormatter("%m-%d")
@@ -71,7 +76,6 @@ def profile_plot_2D(
     if y == "alt":
         ax.set_ylim(0, 18000)
         ax.set_ylabel("height / m")
-    ax.legend()
     plt.close()
     return fig
     # fig.savefig("ProfilePlot2D_{}.pdf".format(variable), bbox_inches="tight")
