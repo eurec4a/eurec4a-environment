@@ -1,10 +1,7 @@
 # %% IMPORTING MODULES
 ######################################################
-import sys
 import numpy as np
-import pandas as pd
 import xarray as xr
-from tqdm import tqdm
 
 # %% FUNCTION DICTIONARIES
 ######################################################
@@ -58,7 +55,7 @@ def scalar(
     bounds=None,  # in case the upper and lower bounds are the same; in m / Pa
     upper=None,  # in m / Pa
     lower=None,  # in m / Pa
-    cell_method="mean",
+    cell_method="mean",  # possible cell methods for now are mean, min, max, median
     drop_na=True,
 ):
     """
