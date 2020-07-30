@@ -46,8 +46,9 @@ def pass_through_tests():
     return
 
 
-def scalar(
-    profile,
+def height_specified_quantity(
+    ds,
+    variable,
     level_name,  # e.g. "mixed_layer","near_surface"
     dim="height",  # Could also be "pressure"
     level_definition="default",  # preferred definition of the level (default value provided for all level_names)
@@ -55,13 +56,14 @@ def scalar(
     bounds=None,  # in case the upper and lower bounds are the same; in m / Pa
     upper=None,  # in m / Pa
     lower=None,  # in m / Pa
-    cell_method="mean",  # possible cell methods for now are mean, min, max, median
-    drop_na=True,
+    cell_method="mean",  # possible cell methods for now are mean, min, max, median, std, var
+    # for cell_type 'point', cell_method has to be None
+    drop_nan=True,
 ):
     """
-    Function takes a profile(s) and estimates a scalar quantity based on the specified level and method.
+    Function takes a profile(s) and estimates a quantity based on the specified level and method.
     User can specify by which definition they want the level to be calculated. Ideally, the profile is provided
-    as a DataArray with altitude as dimension. 
+    as a DataSet with altitude as dimension and with variables have standard names conforming to CF.
     """
 
     try:
@@ -112,20 +114,23 @@ def scalar(
     if cell_type == "point":
         if bounds is not None or upper is not None or lower is not None:
             raise Exception("if cell type is point, there can be no specified bounds")
+        cell_method = None
 
-    if drop_na is True:
-        cell_method = "nan" + cell_method
+    # if drop_na is True:
+    #     cell_method = "nan" + cell_method
 
-    method = getattr(np, cell_method)
+    # method = getattr(np, cell_method)
+
+    # profile =
 
     if cell_type == "bin":
-        scalar = method(
-            profile.sel(height=slice(level_value - lower, level_value + upper))
+        quantity = eval(
+            f"getattr(ds[variable].sel({dim}=slice(lower, upper)), cell_method)(dim=dim,skipna=drop_nan)"
         )
     elif cell_type == "point":
-        scalar = method(profile.sel(height=level_value))
+        quantity = eval(f"ds[variable].sel({dim}=level_value)")
 
-    return scalar
+    return quantity
 
 
 # %% TO DO LIST
