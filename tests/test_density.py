@@ -12,5 +12,5 @@ def test_density_calculation():
     da_density = calc_density(ds)
     # check that we get some sensible numbers out for the density
     assert da_density.units == "kg/m3"
-    assert da_density.max() < 2.0
+    assert da_density.max() < 2.5
     assert da_density.min() > 0.0
