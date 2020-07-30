@@ -35,3 +35,17 @@ def test_height_specified_quantity(ds_test_levels):
         == np.array([293.16, 293.36, 293.56])
     ).all()
 
+    assert (
+        np.round(
+            levels.height_specified_quantity(
+                ds,
+                variable="T",
+                level_name="custom",
+                level_value=3000,
+                bounds=100,
+                cell_method="max",
+            ),
+            2,
+        ).values
+        == np.array([271.66, 271.86, 272.06])
+    ).all()

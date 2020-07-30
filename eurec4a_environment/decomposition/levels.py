@@ -49,8 +49,9 @@ def pass_through_tests():
 def height_specified_quantity(
     ds,
     variable,
-    level_name,  # e.g. "mixed_layer","near_surface"
-    dim="height",  # Could also be "pressure"
+    level_name,  # e.g. "mixed_layer","near_surface","custom"
+    level_value=None,
+    dim="height",  # Could also be "pressure" in later updates
     level_definition="default",  # preferred definition of the level (default value provided for all level_names)
     cell_type="bin",  # bin or point
     bounds=None,  # in case the upper and lower bounds are the same; in m / Pa
@@ -66,23 +67,39 @@ def height_specified_quantity(
     as a DataSet with altitude as dimension and with variables have standard names conforming to CF.
     """
 
-    try:
-        default_functions[level_name]
-    except KeyError as err:
-        print(
-            f"{err} : This level_name is not valid. Do you want to use custom_level instead?"
-        )
-        return
-
-    try:
-        level_functions[level_name][level_definition]
-    except KeyError as err:
-        print(
-            f"{err} : This is not recognised as a level definition. Definitions available for {level_name} are {list(level_functions[level_name].keys)}"
-        )
-        return
+    if level_name == "custom":
+        try:
+            level_value >= 0
+        except TypeError:
+            if level_value is None:
+                print(
+                    'If level_name is "custom", a non-negative level_value must be provided.'
+                )
+                return
+        else:
+            if level_value < 0:
+                print(
+                    'If level_name is "custom", a non-negative level_value must be provided.'
+                )
+                return
     else:
-        level_value = level_functions[level_name][level_definition]()
+        try:
+            default_functions[level_name]
+        except KeyError as err:
+            print(
+                f"{err} : This level_name is not valid. Do you want to use custom_level instead?"
+            )
+            return
+
+        try:
+            level_functions[level_name][level_definition]
+        except KeyError as err:
+            print(
+                f"{err} : This is not recognised as a level definition. Definitions available for {level_name} are {list(level_functions[level_name].keys)}"
+            )
+            return
+        else:
+            level_value = level_functions[level_name][level_definition]()
 
     if cell_type == "bin":
         if bounds is None:
