@@ -3,9 +3,10 @@
 
 import numpy as np
 import xarray as xr
-#from ...constants import Rd, Rv, eps
 
+# from ...constants import Rd, Rv, eps
 from constants import Rd, Rv, eps
+
 
 def calc_density(ds, pres="p", temp="T", specific_humidity="q", altitude="height"):
 
@@ -38,5 +39,5 @@ def calc_density(ds, pres="p", temp="T", specific_humidity="q", altitude="height
     da = xr.DataArray(density, dims=dims, coords={d: ds[d] for d in dims})
     da.attrs["long_name"] = "density of air"
     da.attrs["units"] = "kg/m3"
-    
+
     return da

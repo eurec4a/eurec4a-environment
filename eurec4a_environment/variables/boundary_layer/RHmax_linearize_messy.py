@@ -6,8 +6,8 @@ Created on Wed Jul 29 16:13:02 2020
 """
 
 #%%
-#import os
-#import xarray as xr
+# import os
+# import xarray as xr
 #
 # load JOANNE dropsondes
 input_dir = "/Users/annaleaalbright/Dropbox/EUREC4A/Dropsondes/Data/"
