@@ -35,16 +35,16 @@ def calc_peakRH_linearize(
     z_max_lin=400.0,
 ):
     """
-     Calculate maximum in relative humidity (RH) profile that minimizes difference between 
-     observed RH profile and RH profile linearized around lower levels (i.e. 200-400m). 
-     Assume moisture is well-mixed at these lower levels, such that RH would increase and 
+     Calculate maximum in relative humidity (RH) profile that minimizes difference between
+     observed RH profile and RH profile linearized around lower levels (i.e. 200-400m).
+     Assume moisture is well-mixed at these lower levels, such that RH would increase and
      assume linear profile as an idealization
      Inputs:
-         -- ds: dataset 
+         -- ds: dataset
          -- altitude, rh, time_dim: variable names
          -- z_min and z_max: lower and upper bounds for mixed layer height
          -- z_min_lin and z_max_lin: bounds for linearization of observed RH profile
-     Outputs: 
+     Outputs:
          -- da: datarray containing h_peakRH_linfit
      """
     h_peakRH_linfit = np.zeros(len(ds[rh]))
