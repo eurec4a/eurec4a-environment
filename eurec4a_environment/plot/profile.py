@@ -79,3 +79,41 @@ def profile_plot_2D(
     plt.close()
     return fig
     # fig.savefig("ProfilePlot2D_{}.pdf".format(variable), bbox_inches="tight")
+
+
+def plot_profile_1D(
+    ds_plot,
+    variables=["rh", "q"],
+    axis_labels=["relative humidity (%)", "specific humidity (g/kg)"],
+    height_labels=None,
+):
+    """Plot a 1D profile plot of two variables and a height level 
+    input a 1D dataset (that is profiles e.g. of one timestep or sounding or a mean profile)
+    """
+
+    fig, ax1 = plt.subplots(figsize=(12, 12))
+    altitude = "alt"
+    ds_plot[variables[0]].plot(ax=ax1, y=altitude, linewidth=4, color="navy")
+    ax1.set_xlabel(axis_labels[0], color="navy")
+    ax1.set_ylabel("altitude (m)", color="black")
+
+    ax2 = ax1.twiny()
+    ds_plot[variables[1]].plot(ax=ax2, y=altitude, linewidth=4, color="lightblue")
+    ax2.set_xlabel(axis_labels[1], color="lightblue")
+
+    if height_labels:
+        ax1.axhline(
+            ds_plot[height_labels],
+            color="navy",
+            linewidth=2,
+            alpha=1,
+            label=height_labels,
+        )
+
+    ax1.set_title("")
+    ax2.set_title("")
+    ax1.grid()
+    ax1.legend(loc="best")
+    plt.tight_layout()
+    plt.close()
+    return fig
