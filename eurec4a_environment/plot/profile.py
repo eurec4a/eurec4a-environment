@@ -58,7 +58,7 @@ def profile_plot_2D(
         **kwargs
     )
 
-    if height_labels == True:
+    if height_labels:
         varh = ds[height_labels]
 
         varh.plot(
