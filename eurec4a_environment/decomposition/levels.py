@@ -22,6 +22,7 @@ def estimate_level():  # Temporary function till actual functions are linked in 
 
 
 dictionary_of_functions_here = {
+    "default": estimate_level,
     "max_RH": estimate_level,
     "max_thetav_gradient": "function_here",
     "and_so_on": "for_individual_levels",
@@ -40,8 +41,6 @@ level_functions = {
 
 # %% TEMPLATE FUNCTION
 ######################################################
-
-
 def pass_through_tests():
     return
 
@@ -57,7 +56,7 @@ def height_specified_quantity(
     bounds=None,  # in case the upper and lower bounds are the same; in m / Pa
     upper=None,  # in m / Pa
     lower=None,  # in m / Pa
-    cell_method="mean",  # possible cell methods for now are mean, min, max, median, std, var
+    cell_method="mean",  # possible cell methods for now are mean, min, max, median, std, var, sum
     # for cell_type 'point', cell_method has to be None
     drop_nan=True,
 ):
@@ -132,13 +131,6 @@ def height_specified_quantity(
         if bounds is not None or upper is not None or lower is not None:
             raise Exception("if cell type is point, there can be no specified bounds")
         cell_method = None
-
-    # if drop_na is True:
-    #     cell_method = "nan" + cell_method
-
-    # method = getattr(np, cell_method)
-
-    # profile =
 
     if cell_type == "bin":
         quantity = eval(
