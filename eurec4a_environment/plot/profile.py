@@ -123,4 +123,3 @@ def plot_profile_1D(
     plt.tight_layout()
     plt.close()
     return fig
-
