@@ -1,7 +1,7 @@
 import numpy as np
 
-
 from eurec4a_environment.variables import boundary_layer
+from eurec4a_environment.variables.boundary_layer import inversion_height
 
 
 def test_LCL_Bolton(ds_isentropic_test_profiles):

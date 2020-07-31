@@ -1,3 +1,5 @@
+import xarray as xr
+
 def find_inversion_height_grad_RH(
     ds, altitude="alt", rh="rh", smoothing_win_size=None, z_min=1500, z_max=4000.0
 ):
