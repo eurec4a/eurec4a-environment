@@ -22,8 +22,6 @@ def test_mixed_layer_height_RHmax(ds_isentropic_test_profiles):
     )
     assert np.allclose(da_rh_peak, z0)
 
-    import numpy as np
-
 def test_inversion_height_gradient_RH(ds_isentropic_test_profiles):
     ds = ds_isentropic_test_profiles
     da_inv = boundary_layer.inversion_height.find_inversion_height_grad_RH(ds=ds)

@@ -50,25 +50,18 @@ def profile_plot_2D(
     var = ds[variable]
 
     if interpolate_between_profiles:
-        var.plot.contourf(
-            ax=ax,
-            x=x,
-            y=y,
-            add_colorbar=True,
-            robust=True,
-            cbar_kwargs=dict(label=cbar_label),
-            **kwargs
-        )
+        plot_func = var.plot.contourf
     else:
-        var.plot.pcolormesh(
-            ax=ax,
-            x=x,
-            y=y,
-            add_colorbar=True,
-            robust=True,
-            cbar_kwargs=dict(label=cbar_label),
-            **kwargs
-        )
+        plot_func = var.plot.pcolormesh
+    plot_func(
+        ax=ax,
+        x=x,
+        y=y,
+        add_colorbar=True,
+        robust=True,
+        cbar_kwargs=dict(label=cbar_label),
+        **kwargs
+    )
 
     if height_labels:
         varh = ds[height_labels]
