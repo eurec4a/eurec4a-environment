@@ -2,6 +2,7 @@ import numpy as np
 
 
 from eurec4a_environment.variables import boundary_layer
+import eurec4a_environment.source_data
 
 
 def test_LCL_Bolton(ds_isentropic_test_profiles):
@@ -27,3 +28,10 @@ def test_inversion_height_gradient_RH(ds_isentropic_test_profiles):
     da_inv = boundary_layer.inversion_height.find_inversion_height_grad_RH(ds=ds)
     assert da_inv.mean() > 1500.0
     assert da_inv.mean() < 4000.0
+
+def test_mixed_layer_height_RH_lin():
+    ds = eurec4a_environment.source_data.open_joanne_dataset()
+    ds = ds.isel(sounding=slice(0, 10))
+    da_lin = boundary_layer.mixed_layer_height.calc_peakRH_linearize(ds)
+    assert len(da_lin) == 10
+    assert np.all(da_lin < 1500.)
