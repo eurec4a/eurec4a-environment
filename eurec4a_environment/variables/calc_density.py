@@ -3,7 +3,7 @@
 
 import numpy as np
 import xarray as xr
-from ...constants import Rd, Rv, eps
+from ..constants import Rd, Rv, eps
 #from constants import Rd, Rv, eps
 
 
