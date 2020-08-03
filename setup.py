@@ -3,7 +3,6 @@ from setuptools import setup, find_packages
 import versioneer
 
 INSTALL_REQUIRES = ["xarray", "netcdf4", "typhon", "tqdm", "statsmodels"]
-
 setup(
     name="eurec4a-environment",
     version=versioneer.get_version(),

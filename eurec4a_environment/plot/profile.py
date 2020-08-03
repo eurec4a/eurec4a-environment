@@ -22,6 +22,7 @@ def profile_plot_2D(
     ax=None,
     y="alt",
     x="launch_time",
+    interpolate_between_profiles=True,
     cbar_label=None,
     height_labels=None,
     height_labels_color="green",
@@ -31,7 +32,7 @@ def profile_plot_2D(
     """Plot a 2D (default time-height) plot and optionally another height level as scatter points
 
     **kwargs: Additional keyword arguments passed to
-            :func:`matplotlib.pyplot.contourf`.
+            :func:`matplotlib.pyplot.contourf` if interpolate_between_profiles, else to :func:`matplotlib.pyplot.pcolormesh`
     """
 
     # ensure we have x (default launch time) as a coordinate
@@ -48,7 +49,11 @@ def profile_plot_2D(
 
     var = ds[variable]
 
-    var.plot.contourf(
+    if interpolate_between_profiles:
+        plot_func = var.plot.contourf
+    else:
+        plot_func = var.plot.pcolormesh
+    plot_func(
         ax=ax,
         x=x,
         y=y,
@@ -86,6 +91,7 @@ def plot_profile_1D(
     variables=["rh", "q"],
     axis_labels=["relative humidity (%)", "specific humidity (g/kg)"],
     height_labels=None,
+    **kwargs
 ):
     """Plot a 1D profile plot of two variables and a height level 
     input a 1D dataset (that is profiles e.g. of one timestep or sounding or a mean profile)
@@ -93,12 +99,12 @@ def plot_profile_1D(
 
     fig, ax1 = plt.subplots(figsize=(12, 12))
     altitude = "alt"
-    ds_plot[variables[0]].plot(ax=ax1, y=altitude, linewidth=4, color="navy")
+    ds_plot[variables[0]].plot(ax=ax1, y=altitude, color="navy", **kwargs)
     ax1.set_xlabel(axis_labels[0], color="navy")
     ax1.set_ylabel("altitude (m)", color="black")
 
     ax2 = ax1.twiny()
-    ds_plot[variables[1]].plot(ax=ax2, y=altitude, linewidth=4, color="lightblue")
+    ds_plot[variables[1]].plot(ax=ax2, y=altitude, color="lightblue", **kwargs)
     ax2.set_xlabel(axis_labels[1], color="lightblue")
 
     if height_labels:
