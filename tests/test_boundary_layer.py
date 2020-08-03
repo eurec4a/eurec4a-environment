@@ -26,7 +26,5 @@ def test_inversion_height_gradient_RH(ds_isentropic_test_profiles):
     ds = ds_isentropic_test_profiles.copy()
     z_INV = 2000.
     ds['RH'] = ds.RH.where(ds.alt < z_INV, other=0.5)
-    print (ds.RH)
     da_inv = boundary_layer.inversion_height.find_inversion_height_grad_RH(ds=ds, rh = 'RH')
-    print (da_inv)
     assert np.allclose(da_inv,z_INV, atol=20)  ## within 20m
