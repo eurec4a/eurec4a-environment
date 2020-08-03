@@ -23,7 +23,10 @@ def test_mixed_layer_height_RHmax(ds_isentropic_test_profiles):
     assert np.allclose(da_rh_peak, z0)
 
 def test_inversion_height_gradient_RH(ds_isentropic_test_profiles):
-    ds = ds_isentropic_test_profiles
+    ds = ds_isentropic_test_profiles.copy()
+    z_INV = 2000.
+    ds['RH'] = ds.RH.where(ds.alt < z_INV, other=0.5)
+    print (ds.RH)
     da_inv = boundary_layer.inversion_height.find_inversion_height_grad_RH(ds=ds, rh = 'RH')
-    assert da_inv.mean() > 1500.0
-    assert da_inv.mean() < 4000.0
+    print (da_inv)
+    assert np.allclose(da_inv,z_INV, atol=20)  ## within 20m

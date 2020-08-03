@@ -18,7 +18,7 @@ def find_inversion_height_grad_RH(
         RH = ds_lowertroposhere[rh]
 
     RHg = RH.differentiate(coord=altitude)
-    ix = RHg.argmax(dim=altitude, skipna=True)
+    ix = RHg.argmin(dim=altitude, skipna=True)
     da_z = RHg.isel({ altitude: ix }).alt
     da_z.attrs["long_name"] = "inversion layer height (from RH gradient)"
     da_z.attrs["units"] = "m"
