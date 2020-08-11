@@ -14,6 +14,7 @@ INSTALL_REQUIRES = [
     "pydap",
     "s3fs",
     "requests",
+    "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
 ]
 setup(
     name="eurec4a-environment",
@@ -31,5 +32,4 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     zip_safe=False,
-    dependency_links=["git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray"]
 )
