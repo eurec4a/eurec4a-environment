@@ -13,6 +13,7 @@ INSTALL_REQUIRES = [
     "fsspec>=0.7.4",
     "pydap",
     "s3fs",
+    "requests",
 ]
 setup(
     name="eurec4a-environment",
