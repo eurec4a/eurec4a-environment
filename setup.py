@@ -14,6 +14,7 @@ INSTALL_REQUIRES = [
     "pydap",
     "s3fs",
     "requests",
+    "aiohttp",
     "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
 ]
 setup(
