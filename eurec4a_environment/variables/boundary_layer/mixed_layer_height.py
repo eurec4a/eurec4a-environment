@@ -4,13 +4,16 @@ from scipy.signal import find_peaks
 import statsmodels.api as sm
 
 
-def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
+from ... import nomenclature as nom
+
+
+def calc_peak_RH(ds, altitude=nom.ALTITUDE, rh=nom.RELATIVE_HUMIDITY, z_min=200.0, z_max=900.0):
     """
     Calculate height at maximum relative humidity values
     """
     ds_mixed_layer = ds.sel({altitude: slice(z_min, z_max)})
 
-    da_rh = ds_mixed_layer[rh]
+    da_rh = nom.get_field(ds=ds_mixed_layer, field_name=rh)
     dims = list(ds.dims.keys())
     # drop the height coord
     del dims[dims.index(altitude)]
@@ -26,8 +29,8 @@ def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
 
 def calc_peakRH_linearize(
     ds,
-    altitude="height",
-    rh="rh",
+    altitude=nom.ALTITUDE,
+    rh=nom.RELATIVE_HUMIDITY,
     time_dim="sounding",
     z_min=200.0,
     z_max=900.0,
@@ -47,26 +50,28 @@ def calc_peakRH_linearize(
      Outputs:
          -- da: datarray containing h_peakRH_linfit
      """
-    h_peakRH_linfit = np.zeros(len(ds[rh]))
+    da_rh = nom.get_field(ds=ds, field_name=rh)
+    da_alt = nom.get_field(ds=ds, field_name=altitude)
 
-    dz = int(ds[altitude].diff(dim=altitude)[1])  # dz=10m
+    h_peakRH_linfit = np.zeros(len(da_rh))
+
+    dz = int(da_alt.diff(dim=altitude)[1])  # dz=10m
 
     mixed_layer = np.logical_and(
-        ds[altitude] >= z_min, ds[altitude] <= 1500
+        da_alt >= z_min, da_alt <= 1500
     )  # enforce z_max later
     ml_linfit = np.logical_and(
-        ds[altitude] >= z_min_lin, ds[altitude] <= z_max_lin
+        da_alt >= z_min_lin, da_alt <= z_max_lin
     )  # for linearized RH profile
 
-    for i in range(len(ds[rh])):
-
-        rh_profile = ds[rh].isel({time_dim: i}).interpolate_na(dim=altitude)
+    for i in range(len(da_rh)):
+        rh_profile = da_rh.isel({time_dim: i}).interpolate_na(dim=altitude)
         X_height = rh_profile[ml_linfit][altitude]
         X = sm.add_constant(X_height.values)  # add intercept
         model = sm.OLS(
             rh_profile[ml_linfit].values, X
         ).fit()  # instantiate linear model
-        linearized_RH = model.predict(sm.add_constant(ds[altitude]))
+        linearized_RH = model.predict(sm.add_constant(da_alt))
 
         # 'find_peaks' is scipy function
         idx_peaks_RH_raw, _ = find_peaks(rh_profile[mixed_layer])
