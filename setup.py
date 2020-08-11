@@ -2,7 +2,18 @@
 from setuptools import setup, find_packages
 import versioneer
 
-INSTALL_REQUIRES = ["xarray", "netcdf4", "typhon", "tqdm", "statsmodels"]
+INSTALL_REQUIRES = [
+    "xarray",
+    "netcdf4",
+    "typhon",
+    "tqdm",
+    "statsmodels",
+    "intake",  # requirements below are for using EUREC4A intake data catalog
+    "zarr",
+    "fsspec>=0.7.4",
+    "pydap",
+    "s3fs",
+]
 setup(
     name="eurec4a-environment",
     version=versioneer.get_version(),
@@ -19,4 +30,5 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     zip_safe=False,
+    dependency_links=["git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray"]
 )

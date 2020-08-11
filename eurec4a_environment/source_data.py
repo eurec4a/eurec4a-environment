@@ -1,13 +1,17 @@
 from pathlib import Path
 from datetime import datetime, timedelta
+import functools
 
 from tqdm import tqdm
 import requests
 import xarray as xr
 import yaml
+import intake
 
 
-JOANNE_LEV3_URL = "https://owncloud.gwdg.de/index.php/s/uy2eBvEI2pHRVKf/download?path=%2FLevel_3&files=EUREC4A_JOANNE_Dropsonde-RD41_Level_3_v0.5.7-alpha%2B0.g45fe69d.dirty.nc"
+EUREC4A_INTAKE_CATALOG_URL = (
+    "https://raw.githubusercontent.com/eurec4a/eurec4a-intake/master/catalog.yml"
+)
 
 HALO_FLIGHT_DECOMP_DATE_FORMAT = "%Y%m%d"
 HALO_FLIGHT_DECOMP_URL = "https://raw.githubusercontent.com/eurec4a/halo-flight-phase-separation/master/flight_phase_files/EUREC4A_HALO_Flight-Segments_{date}_v1.0.yaml"
@@ -28,6 +32,11 @@ HALO_FLIGHT_DAYS = [
     "2020-02-13",
     "2020-02-15",
 ]
+
+
+@functools.lru_cache(maxsize=1)
+def get_intake_catalog():
+    return intake.open_catalog(EUREC4A_INTAKE_CATALOG_URL)
 
 
 def _download_file(url, block_size=8192):
@@ -65,8 +74,8 @@ def open_joanne_dataset(level=3):
     """
     if not level == 3:
         raise NotImplementedError(level)
-    filename = _download_file(JOANNE_LEV3_URL)
-    ds = xr.open_dataset(filename)
+    cat = get_intake_catalog()
+    ds = cat.dropsondes.to_dask()
     return ds.sortby("launch_time")
 
 
