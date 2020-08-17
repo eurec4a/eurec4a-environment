@@ -11,8 +11,8 @@ import inspect
 import xarray as xr
 
 
-TEMPERATURE = "T"
-ALTITUDE = "height"
+TEMPERATURE = "ta"
+ALTITUDE = "alt"
 RELATIVE_HUMIDITY = "rh"
 POTENTIAL_TEMPERATURE = "theta"
 PRESSURE = "p"
@@ -46,7 +46,7 @@ CF_STANDARD_NAMES = {
     TEMPERATURE: "air_temperature",
     ALTITUDE: "geopotential_height",
     RELATIVE_HUMIDITY: "relative_humidity",
-    POTENTIAL_TEMPERATURE: "potential_temperature",
+    POTENTIAL_TEMPERATURE: "air_potential_temperature",
     PRESSURE: "air_pressure",
     SPECIFIC_HUMIDITY: "specific_humidity",
     WIND_SPEED: "wind_speed",

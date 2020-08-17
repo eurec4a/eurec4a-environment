@@ -42,6 +42,18 @@ def test_get_field_by_name(field_name):
 def test_get_field_by_standard_name(field_name):
     ds = eurec4a_environment.source_data.open_joanne_dataset()
 
+    # JOANNE dataset is renaming some variables, so while we have the
+    # version with old namings we'll just let this pass
+    # TODO: remove this mapping once we've updated the JOANNE dataset in the
+    # intake catalog
+    if ds.attrs["JOANNE-version"] == "0.5.7-alpha+0.g45fe69d.dirty":
+        if field_name == "ta":
+            ds = ds.rename(dict(T="ta"))
+        elif field_name == "alt":
+            ds = ds.rename(dict(height="alt"))
+        elif field_name == "theta":
+            ds.theta.attrs["standard_name"] = "air_potential_temperature"
+
     # make a dataset where the variable name is doesn't match
     ds_copy = ds[[field_name]]
     ds_copy = ds[[field_name]].rename({field_name: "_foobar_field_"})
@@ -52,6 +64,18 @@ def test_get_field_by_standard_name(field_name):
 def test_get_field_missing_no_standard_name():
     field_name = nom.TEMPERATURE
     ds = eurec4a_environment.source_data.open_joanne_dataset()
+
+    # JOANNE dataset is renaming some variables, so while we have the
+    # version with old namings we'll just let this pass
+    # TODO: remove this mapping once we've updated the JOANNE dataset in the
+    # intake catalog
+    if ds.attrs["JOANNE-version"] == "0.5.7-alpha+0.g45fe69d.dirty":
+        if field_name == "ta":
+            ds = ds.rename(dict(T="ta"))
+        elif field_name == "alt":
+            ds = ds.rename(dict(height="alt"))
+        elif field_name == "theta":
+            ds.theta.attrs["standard_name"] = "air_potential_temperature"
 
     # make a dataset where the variable name is doesn't match and the
     # standard_name isn't set
@@ -74,7 +98,7 @@ def test_get_field_multiple_by_standard_name():
     """
     Tests that merging multiple variables on the same dataset works
     """
-    field_name = nom.TEMPERATURE
+    field_name = nom.RELATIVE_HUMIDITY
     field_name_copy = field_name + "_copy"
     # XXX: currently if there's a field with correct name then the standard
     # names are ignored, is this ok?
