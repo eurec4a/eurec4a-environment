@@ -1,5 +1,6 @@
 import xarray as xr
 
+
 def find_inversion_height_grad_RH(
     ds, altitude="alt", rh="rh", smoothing_win_size=None, z_min=1500, z_max=4000.0
 ):
@@ -11,7 +12,9 @@ def find_inversion_height_grad_RH(
     if smoothing_win_size:
         RH = (
             ds_lowertroposhere[rh]
-            .rolling(alt=smoothing_win_size, min_periods=smoothing_win_size, center=True)
+            .rolling(
+                alt=smoothing_win_size, min_periods=smoothing_win_size, center=True
+            )
             .mean(skipna=True)
         )
     else:
@@ -19,7 +22,7 @@ def find_inversion_height_grad_RH(
 
     RHg = RH.differentiate(coord=altitude)
     ix = RHg.argmin(dim=altitude, skipna=True)
-    da_z = RHg.isel({ altitude: ix }).alt
+    da_z = RHg.isel({altitude: ix}).alt
     da_z.attrs["long_name"] = "inversion layer height (from RH gradient)"
     da_z.attrs["units"] = "m"
 

@@ -7,7 +7,9 @@ import statsmodels.api as sm
 from ... import nomenclature as nom
 
 
-def calc_peak_RH(ds, altitude=nom.ALTITUDE, rh=nom.RELATIVE_HUMIDITY, z_min=200.0, z_max=900.0):
+def calc_peak_RH(
+    ds, altitude=nom.ALTITUDE, rh=nom.RELATIVE_HUMIDITY, z_min=200.0, z_max=900.0
+):
     """
     Calculate height at maximum relative humidity values
     """
