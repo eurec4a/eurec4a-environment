@@ -9,7 +9,7 @@ name" (See http://cfconventions.org/standard-names.html for the list of
 """
 import inspect
 import xarray as xr
-import cf_units
+import cfunits
 
 
 # TODO: update temperature to be called `ta` once JOANNE dataset is released
@@ -138,12 +138,12 @@ def get_field(ds, field_name, units=None):
             raise Exception(
                 f"Units haven't been set on `{field_name}` field in dataset"
             )
-        old_units = cf_units.Unit(da.attrs["units"])
-        new_units = cf_units.Unit(units)
+        old_units = cfunits.Units(da.attrs["units"])
+        new_units = cfunits.Units(units)
         if old_units == new_units:
             return da
         else:
-            values_converted = old_units.convert(da.values, new_units)
+            values_converted = cfunits.Units.conform(da.values, old_units, new_units)
             attrs = dict(da.attrs)
             attrs["units"] = units
             da_converted = xr.DataArray(

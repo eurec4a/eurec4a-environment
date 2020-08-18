@@ -15,7 +15,7 @@ INSTALL_REQUIRES = [
     "s3fs",
     "requests",
     "aiohttp",
-    "cf_units",
+    "cfunits",
     "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
 ]
 setup(
