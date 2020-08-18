@@ -135,7 +135,9 @@ def get_field(ds, field_name, units=None):
         # ensure that output is in correct units
         if "units" not in da.attrs:
             field_name = da.name
-            raise Exception(f"Units haven't been set on `{field_name}` field in dataset")
+            raise Exception(
+                f"Units haven't been set on `{field_name}` field in dataset"
+            )
         old_units = cf_units.Unit(da.attrs["units"])
         new_units = cf_units.Unit(units)
         if old_units == new_units:

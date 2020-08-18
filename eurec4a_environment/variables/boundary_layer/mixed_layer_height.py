@@ -15,7 +15,7 @@ def calc_peak_RH(
     """
     ds_mixed_layer = ds.sel({altitude: slice(z_min, z_max)})
 
-    da_rh = nom.get_field(ds=ds_mixed_layer, field_name=rh)
+    da_rh = nom.get_field(ds=ds_mixed_layer, field_name=rh, units="%")
     dims = list(ds.dims.keys())
     # drop the height coord
     del dims[dims.index(altitude)]
@@ -52,8 +52,8 @@ def calc_peakRH_linearize(
      Outputs:
          -- da: datarray containing h_peakRH_linfit
      """
-    da_rh = nom.get_field(ds=ds, field_name=rh)
-    da_alt = nom.get_field(ds=ds, field_name=altitude)
+    da_rh = nom.get_field(ds=ds, field_name=rh, units="%")
+    da_alt = nom.get_field(ds=ds, field_name=altitude, units="m")
 
     h_peakRH_linfit = np.zeros(len(da_rh))
 
@@ -101,7 +101,7 @@ def calc_peakRH_linearize(
 
 
 def calc_from_gradient(
-    ds, var, threshold, z_min=200, altitude="height", time="sounding"
+    ds, var, threshold, z_min=200, altitude=nom.ALTITUDE, time="sounding"
 ):
     """
     Find mixed layer height as layer over which x(z+1) - x(z) < threshold
@@ -123,7 +123,7 @@ def calc_from_gradient(
         var_profile,
         threshold,
         z_min,
-        altitude="height",
+        altitude=nom.ALTITUDE,
         time="sounding",
     ):
 
@@ -163,7 +163,7 @@ def calc_from_gradient(
             var_profile,
             threshold,
             z_min,
-            altitude="height",
+            altitude=altitude,
             time="sounding",
         )
 
