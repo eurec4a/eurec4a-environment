@@ -9,7 +9,12 @@ name" (See http://cfconventions.org/standard-names.html for the list of
 """
 import inspect
 import xarray as xr
-import cfunits
+try:
+    import cfunits
+    HAS_UDUNITS2 = True
+except FileNotFoundError:
+    import warnings
+    HAS_UDUNITS2 = False
 
 
 # TODO: update temperature to be called `ta` once JOANNE dataset is released
@@ -138,6 +143,17 @@ def get_field(ds, field_name, units=None):
             raise Exception(
                 f"Units haven't been set on `{field_name}` field in dataset"
             )
+        if da.attrs["units"] == units:
+            return da
+
+        if not HAS_UDUNITS2:
+            raise Exception(
+                "To do correct unit conversion udunits2 is required, without"
+                " it no unit conversion will be done. udunits2 can be installed"
+                " with conda, `conda install -c conda-forge udunits2` or see"
+                " https://stackoverflow.com/a/42387825 for general instructions"
+            )
+
         old_units = cfunits.Units(da.attrs["units"])
         new_units = cfunits.Units(units)
         if old_units == new_units:
