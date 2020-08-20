@@ -1,9 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
 import matplotlib.dates as mdates
 import seaborn as sns
-import typhon
 
 sns.set(
     context="notebook",

@@ -4,7 +4,7 @@ from scipy.signal import find_peaks
 import statsmodels.api as sm
 
 
-def calc_peak_RH(ds, altitude="alt", rh="RH", z_min=200.0, z_max=900.0):
+def calc_peak_RH(ds, altitude="height", rh="rh", z_min=200.0, z_max=900.0):
     """
     Calculate height at maximum relative humidity values
     """
@@ -28,7 +28,7 @@ def calc_peakRH_linearize(
     ds,
     altitude="height",
     rh="rh",
-    time_dim="sounding",
+    time="sounding",
     z_min=200.0,
     z_max=1500.0,
     z_min_lin=50.0,
@@ -41,7 +41,7 @@ def calc_peakRH_linearize(
      assume linear profile as an idealization
      Inputs:
          -- ds: dataset
-         -- altitude, rh, time_dim: variable names
+         -- altitude, rh, time: variable names
          -- z_min and z_max: lower and upper bounds for mixed layer height
          -- z_min_lin and z_max_lin: bounds for linearization of observed RH profile
      Outputs:
@@ -58,7 +58,7 @@ def calc_peakRH_linearize(
 
     for i in range(len(ds[rh])):
 
-        rh_profile = ds[rh].isel({time_dim: i}).interpolate_na(dim=altitude)
+        rh_profile = ds[rh].isel({time: i}).interpolate_na(dim=altitude)
         X_height = rh_profile[ml_linfit][altitude]
         X = sm.add_constant(X_height.values)  # add intercept
         model = sm.OLS(
@@ -107,8 +107,7 @@ def calc_from_gradient(
 
     Outputs: DataArray containing mixed layer height from gradient method
 
-    Note that function is quite slow and should be optimized
-
+    Note that function is slow and should be optimized
     """
 
     def calculateHmix_var(
