@@ -74,6 +74,9 @@ def _get_calling_function_name():
 class FieldMissingException(Exception):
     pass
 
+class UDUNTS2_MissingException(Exception):
+    pass
+
 
 def get_field(ds, field_name, units=None):
     """
@@ -99,7 +102,6 @@ def get_field(ds, field_name, units=None):
             matching_dataarrays = {}
             vars_and_coords = list(ds.data_vars) + list(ds.coords)
             for v in vars_and_coords:
-                print(v)
                 if ds[v].attrs.get("standard_name", None) == standard_name:
                     matching_dataarrays[v] = ds[v]
 
@@ -147,7 +149,7 @@ def get_field(ds, field_name, units=None):
             return da
 
         if not HAS_UDUNITS2:
-            raise Exception(
+            raise UDUNTS2_MissingException(
                 "To do correct unit conversion udunits2 is required, without"
                 " it no unit conversion will be done. udunits2 can be installed"
                 " with conda, `conda install -c conda-forge udunits2` or see"
