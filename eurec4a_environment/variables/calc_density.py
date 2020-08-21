@@ -4,28 +4,21 @@
 import numpy as np
 import xarray as xr
 from ..constants import Rd, Rv, eps
-#from constants import Rd, Rv, eps
+from .. import nomenclature as nom
 
 
-def calc_density(ds, pres="p", temp="T", specific_humidity="q", altitude="height"):
-
+def calc_density(
+    ds,
+    pres=nom.PRESSURE,
+    temp=nom.TEMPERATURE,
+    specific_humidity=nom.SPECIFIC_HUMIDITY,
+    altitude=nom.ALTITUDE,
+):
     # equation: rho = P/(Rd * Tv), where Tv = T(1 + mr/eps)/(1+mr)
 
-    # convert pressure from hPa to Pa
-    if ds[pres].max().values < 1200:
-        pressure = ds[pres] * 100
-    else:
-        pressure = ds[pres]
-    # convert temperature from Celsius to Kelvin
-    if ds[temp].max().values < 100:
-        temp_K = ds[temp] + 273.15
-    else:
-        temp_K = ds[temp]
-    # convert specific humidity from g/kg to kg/kg
-    if ds[specific_humidity].max().values > 10:
-        q = ds[specific_humidity] / 1000
-    else:
-        q = ds[specific_humidity]
+    pressure = nom.get_field(ds=ds, field_name=pres, units="Pa")
+    temp_K = nom.get_field(ds=ds, field_name=temp, units="K")
+    q = nom.get_field(ds=ds, field_name=specific_humidity, units="g/kg")
 
     mixing_ratio = q / (1 - q)
 
