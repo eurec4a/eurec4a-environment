@@ -3,7 +3,7 @@ import numpy as np
 from ...constants import cp_d, g
 
 
-def find_LCL_Bolton(ds, temperature="T", rh="RH", altitude="alt"):
+def find_LCL_Bolton(ds, temperature="T", rh="rh", altitude="height"):
     """
     Calculates distribution of LCL from RH and T at different vertical levels
     returns mean LCL from this distribution

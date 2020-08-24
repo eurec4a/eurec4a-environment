@@ -88,29 +88,4 @@ def calc_inversion_grad_RH_T(
     da.attrs["units"] = "m"
     return da
 
-    # sns.distplot(inv_base_height_gradients)
-
-    # plot vertical profiles dRH/dz and dT/dz
-
-    # fig, ax = plt.subplots(1,2,figsize=(20,8))
-    # for i in range(5): # len(gradient_RH)
-    #     ax[0].plot(gradient_RH.isel({time: i}), gradient_RH[altitude].values,color="lightgrey", linewidth=2,alpha=0.5)
-    # ax[0].plot(gradient_RH.mean(dim=time),gradient_RH[altitude].values,linewidth=4, color='black')
-    # ax[0].spines['right'].set_visible(False)
-    # ax[0].spines['top'].set_visible(False)
-    # ax[0].set_xlabel('$\partial$RH/$\partial$z')
-    # ax[0].set_ylabel('Altitude / m')
-    # ax[0].set_ylim([0,z_max])
-    # ax[0].axvline(x=0, color='black')
-    # ax[0].set_xlim([ -1, 1])
-
-    # for i in range(5):
-    #     ax[1].plot(gradient_T.isel({time: i}), gradient_T[altitude].values,color="lightgrey", linewidth=2,alpha=0.5)
-    # ax[1].plot(gradient_T.mean(dim=time),gradient_T[altitude].values,linewidth=4, color='black')
-    # ax[1].spines['right'].set_visible(False)
-    # ax[1].spines['top'].set_visible(False)
-    # ax[1].set_xlabel('$\partial$T/$\partial$z (dz=10m)' )
-    # #ax[1].set_ylabel('Altitude / m')
-    # ax[1].set_ylim([0,z_max])
-    # ax[1].axvline(x=0, color='black')
-    # ax[1].set_xlim([-0.03, 0.03])
+    
