@@ -69,17 +69,17 @@ class FieldMissingException(Exception):
     pass
 
 
-def get_field_by_name(ds, field_name):
+def get_field_by_name(ds, name):
     """
-    Get field described by `field_name` in dataset `ds`
+    Get field described by `name` in dataset `ds`
     """
-    if field_name in ds:
-        return ds[field_name]
+    if name in ds:
+        return ds[name]
     else:
-        return get_field_by_cf_standard_name(ds, field_name)
+        return get_field_by_cf_standard_name(ds, name)
 
 
-def get_field_by_cf_standard_name(ds, field_name):
+def get_field_by_cf_standard_name(ds, name):
     """Extract fields with matching CF standard names from a dataset
 
     If more than one field has the CF standard name `field_name` then this function
@@ -89,14 +89,11 @@ def get_field_by_cf_standard_name(ds, field_name):
     # so it probably isn't doing the right thing
     calling_function_name = _get_calling_function_name()
 
-    if field_name not in CF_STANDARD_NAMES:
-        raise FieldMissingException(
-            f"Couldn't find the variable `{field_name}` in the provided dataset."
-            f" To use {calling_function_name} you need to provide a variable"
-            f" with the name `{field_name}`"
-        )
+    if name in CF_STANDARD_NAMES:
+        standard_name = CF_STANDARD_NAMES[name]
+    else:
+        standard_name = name
 
-    standard_name = CF_STANDARD_NAMES[field_name]
     matching_dataarrays = {}
     vars_and_coords = list(ds.data_vars) + list(ds.coords)
     for v in vars_and_coords:
@@ -105,9 +102,9 @@ def get_field_by_cf_standard_name(ds, field_name):
 
     if len(matching_dataarrays) == 0:
         raise FieldMissingException(
-            f"Couldn't find the variable `{field_name}` in the provided dataset."
+            f"Couldn't find the variable `{name}` in the provided dataset."
             f" To use {calling_function_name} you need to provide a variable"
-            f" with the name `{field_name}` or set the `standard_name`"
+            f" with the name `{name}` or set the `standard_name`"
             f" attribute to `{standard_name}` for one or more of the variables"
             " in the dataset"
         )

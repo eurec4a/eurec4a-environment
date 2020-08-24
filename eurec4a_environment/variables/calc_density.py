@@ -18,9 +18,9 @@ def calc_density(
 ):
     # equation: rho = P/(Rd * Tv), where Tv = T(1 + mr/eps)/(1+mr)
 
-    pressure = get_field(ds=ds, field_name=pres, units="Pa")
-    temp_K = get_field(ds=ds, field_name=temp, units="K")
-    q = get_field(ds=ds, field_name=specific_humidity, units="g/kg")
+    pressure = get_field(ds=ds, name=pres, units="Pa")
+    temp_K = get_field(ds=ds, name=temp, units="K")
+    q = get_field(ds=ds, name=specific_humidity, units="g/kg")
 
     mixing_ratio = q / (1 - q)
 

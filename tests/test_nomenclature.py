@@ -23,7 +23,7 @@ import eurec4a_environment.source_data
 def test_get_field_by_name(field_name):
     ds = eurec4a_environment.source_data.open_joanne_dataset()
 
-    get_field(ds=ds, field_name=field_name, units=ds[field_name].units)
+    get_field(ds=ds, name=field_name, units=ds[field_name].units)
 
 
 @pytest.mark.parametrize(
@@ -59,7 +59,35 @@ def test_get_field_by_standard_name(field_name):
     ds_copy = ds[[field_name]]
     ds_copy = ds[[field_name]].rename({field_name: "_foobar_field_"})
 
-    get_field(ds=ds_copy, field_name=field_name, units=ds[field_name].units)
+    get_field(ds=ds_copy, name=field_name, units=ds[field_name].units)
+
+
+@pytest.mark.parametrize(
+    "cf_name",
+    [
+        "air_temperature",
+        "geopotential_height",
+        "relative_humidity",
+        "air_potential_temperature",
+        "air_pressure",
+        "specific_humidity",
+        "wind_speed",
+        "eastward_wind",
+        "northward_wind",
+    ],
+)
+def test_get_field_by_cf_standard_name(cf_name):
+    ds = eurec4a_environment.source_data.open_joanne_dataset()
+
+    # JOANNE dataset is renaming some variables, so while we have the
+    # version with old namings we'll just let this pass
+    # TODO: remove this mapping once we've updated the JOANNE dataset in the
+    # intake catalog
+    if ds.attrs["JOANNE-version"] == "0.5.7-alpha+0.g45fe69d.dirty":
+        if cf_name == "air_potential_temperature":
+            ds.theta.attrs["standard_name"] = "air_potential_temperature"
+
+    get_field(ds=ds, name=cf_name)
 
 
 def test_get_field_missing_no_standard_name():
@@ -84,7 +112,7 @@ def test_get_field_missing_no_standard_name():
     del ds_copy["_foobar_field_"].attrs["standard_name"]
 
     with pytest.raises(nom.FieldMissingException):
-        get_field(ds=ds_copy, field_name=field_name, units=ds[field_name].units)
+        get_field(ds=ds_copy, name=field_name, units=ds[field_name].units)
 
 
 def test_get_field_missing_unknown_standard_name():
@@ -92,7 +120,7 @@ def test_get_field_missing_unknown_standard_name():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
 
     with pytest.raises(nom.FieldMissingException):
-        get_field(ds=ds, field_name=field_name, units=None)
+        get_field(ds=ds, name=field_name, units=None)
 
 
 def test_get_field_multiple_by_standard_name():
@@ -109,5 +137,5 @@ def test_get_field_multiple_by_standard_name():
     ds_copy[field_name_copy] = ds[field_name].copy()
     ds_copy[field_name_renamed] = ds[field_name].copy()
 
-    da = get_field(ds=ds_copy, field_name=field_name, units=ds[field_name].units)
+    da = get_field(ds=ds_copy, name=field_name, units=ds[field_name].units)
     assert list(da["var_name"]) == [field_name_copy, field_name_renamed]

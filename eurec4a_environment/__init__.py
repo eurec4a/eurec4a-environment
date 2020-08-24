@@ -6,14 +6,14 @@ __version__ = get_versions()["version"]
 del get_versions
 
 
-def get_field(ds, field_name, units=None):
+def get_field(ds, name, units=None):
     """
-    Get field described by `field_name` in dataset `ds` and ensure it is in the
+    Get field described by `name` in dataset `ds` and ensure it is in the
     units defined by `units` (if `units` != None). The units definition is any
     unit definition supported by
     [UDUNITS](https://www.unidata.ucar.edu/software/udunits/)
     """
-    da = get_field_by_name(ds, field_name)
+    da = get_field_by_name(ds, name)
 
     if units is None:
         return da
