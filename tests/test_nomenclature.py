@@ -47,15 +47,15 @@ def test_get_field_by_standard_name(ds_joanne, field_name):
 @pytest.mark.parametrize(
     "cf_name",
     [
-        "air_temperature",
-        "geopotential_height",
-        "relative_humidity",
-        "air_potential_temperature",
-        "air_pressure",
-        "specific_humidity",
-        "wind_speed",
-        "eastward_wind",
-        "northward_wind",
+        nom.CF_STANDARD_NAMES[nom.TEMPERATURE],
+        nom.CF_STANDARD_NAMES[nom.ALTITUDE],
+        nom.CF_STANDARD_NAMES[nom.POTENTIAL_TEMPERATURE],
+        nom.CF_STANDARD_NAMES[nom.PRESSURE],
+        nom.CF_STANDARD_NAMES[nom.RELATIVE_HUMIDITY],
+        nom.CF_STANDARD_NAMES[nom.SPECIFIC_HUMIDITY],
+        nom.CF_STANDARD_NAMES[nom.WIND_SPEED],
+        nom.CF_STANDARD_NAMES[nom.MERIDIONAL_WIND],
+        nom.CF_STANDARD_NAMES[nom.ZONAL_WIND],
     ],
 )
 def test_get_field_by_cf_standard_name(ds_joanne, cf_name):
