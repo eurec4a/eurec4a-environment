@@ -23,7 +23,7 @@ def convert_units(da, units):
     """
     if "units" not in da.attrs:
         field_name = da.name
-        raise Exception(f"Units haven't been set on `{field_name}` field in dataset")
+        raise KeyError(f"Units haven't been set on `{field_name}` field in dataset")
 
     if da.attrs["units"] == units:
         return da
