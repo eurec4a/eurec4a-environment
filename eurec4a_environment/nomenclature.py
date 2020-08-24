@@ -9,12 +9,8 @@ name" (See http://cfconventions.org/standard-names.html for the list of
 """
 import inspect
 import xarray as xr
-try:
-    import cfunits
-    HAS_UDUNITS2 = True
-except FileNotFoundError:
-    import warnings
-    HAS_UDUNITS2 = False
+
+from .units import convert_units
 
 
 # TODO: update temperature to be called `ta` once JOANNE dataset is released
@@ -72,9 +68,6 @@ def _get_calling_function_name():
 
 
 class FieldMissingException(Exception):
-    pass
-
-class UDUNTS2_MissingException(Exception):
     pass
 
 
@@ -139,32 +132,4 @@ def get_field(ds, field_name, units=None):
     if units is None:
         return da
     else:
-        # ensure that output is in correct units
-        if "units" not in da.attrs:
-            field_name = da.name
-            raise Exception(
-                f"Units haven't been set on `{field_name}` field in dataset"
-            )
-        if da.attrs["units"] == units:
-            return da
-
-        if not HAS_UDUNITS2:
-            raise UDUNTS2_MissingException(
-                "To do correct unit conversion udunits2 is required, without"
-                " it no unit conversion will be done. udunits2 can be installed"
-                " with conda, `conda install -c conda-forge udunits2` or see"
-                " https://stackoverflow.com/a/42387825 for general instructions"
-            )
-
-        old_units = cfunits.Units(da.attrs["units"])
-        new_units = cfunits.Units(units)
-        if old_units == new_units:
-            return da
-        else:
-            values_converted = cfunits.Units.conform(da.values, old_units, new_units)
-            attrs = dict(da.attrs)
-            attrs["units"] = units
-            da_converted = xr.DataArray(
-                values_converted, coords=da.coords, dims=da.dims, attrs=attrs
-            )
-            return da_converted
+        return convert_units(da, units)
