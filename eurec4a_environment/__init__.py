@@ -1,6 +1,6 @@
 from ._version import get_versions
 from .nomenclature import get_field_by_name
-from .units import convert_units
+from .unit import convert_units
 
 __version__ = get_versions()["version"]
 del get_versions
