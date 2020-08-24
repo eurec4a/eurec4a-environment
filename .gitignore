@@ -1,5 +1,15 @@
+# Python 
 *.pyc
 .*.sw*
+
+# MacOS 
 .DS_Store
 *.nc
+
+# Directories
 data/
+
+eurec4a_environment.egg-info/
+
+# VSCode
+*.vscode
