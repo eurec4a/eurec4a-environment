@@ -17,6 +17,8 @@ INSTALL_REQUIRES = [
     "aiohttp",
     "cfunits",
     "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
+    "numpy",
+    "cartopy",
 ]
 setup(
     name="eurec4a-environment",
