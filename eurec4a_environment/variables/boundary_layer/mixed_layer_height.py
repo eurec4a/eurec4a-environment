@@ -3,14 +3,18 @@ import xarray as xr
 from scipy.signal import find_peaks
 import statsmodels.api as sm
 
+from ... import nomenclature as nom
 
-def calc_peak_RH(ds, altitude="height", rh="rh", z_min=200.0, z_max=900.0):
+
+def calc_peak_RH(
+    ds, altitude=nom.ALTITUDE, rh=nom.RELATIVE_HUMIDITY, z_min=200.0, z_max=900.0
+):
     """
     Calculate height at maximum relative humidity values
     """
     ds_mixed_layer = ds.sel({altitude: slice(z_min, z_max)})
 
-    da_rh = ds_mixed_layer[rh]
+    da_rh = nom.get_field(ds=ds_mixed_layer, field_name=rh, units="%")
     dims = list(ds.dims.keys())
     # drop the height coord
     del dims[dims.index(altitude)]
@@ -26,8 +30,8 @@ def calc_peak_RH(ds, altitude="height", rh="rh", z_min=200.0, z_max=900.0):
 
 def calc_peakRH_linearize(
     ds,
-    altitude="height",
-    rh="rh",
+    altitude=nom.ALTITUDE,
+    rh=nom.RELATIVE_HUMIDITY,
     time="sounding",
     z_min=200.0,
     z_max=1500.0,
@@ -47,13 +51,17 @@ def calc_peakRH_linearize(
      Outputs:
          -- da: datarray containing h_peakRH_linfit
      """
-    h_peakRH_linfit = np.zeros(len(ds[rh]))
+    da_rh = nom.get_field(ds=ds, field_name=rh, units="%")
+    da_alt = nom.get_field(ds=ds, field_name=altitude, units="m")
 
-    dz = int(ds[altitude].diff(dim=altitude)[1])  # dz=10m
+    h_peakRH_linfit = np.zeros(len(da_rh))
 
-    mixed_layer = np.logical_and(ds[altitude] >= z_min, ds[altitude] <= z_max)
+    dz = int(da_alt.diff(dim=altitude)[1])  # dz=10m
+
+    mixed_layer = np.logical_and(da_alt >= z_min, da_alt <= z_max)
+
     ml_linfit = np.logical_and(
-        ds[altitude] >= z_min_lin, ds[altitude] <= z_max_lin
+        da_alt >= z_min_lin, da_alt <= z_max_lin
     )  # for linearized RH profile
 
     for i in range(len(ds[rh])):
@@ -64,7 +72,7 @@ def calc_peakRH_linearize(
         model = sm.OLS(
             rh_profile[ml_linfit].values, X
         ).fit()  # instantiate linear model
-        linearized_RH = model.predict(sm.add_constant(ds[altitude]))
+        linearized_RH = model.predict(sm.add_constant(da_alt))
 
         # 'find_peaks' is scipy function
         idx_peaks_RH_raw, _ = find_peaks(rh_profile[mixed_layer])
@@ -94,7 +102,7 @@ def calc_peakRH_linearize(
 
 
 def calc_from_gradient(
-    ds, var, threshold, z_min=200, altitude="height", time="sounding"
+    ds, var, threshold, z_min=200, altitude=nom.ALTITUDE, time="sounding"
 ):
     """
     Find mixed layer height as layer over which x(z+1) - x(z) < threshold
@@ -107,7 +115,7 @@ def calc_from_gradient(
 
     Outputs: DataArray containing mixed layer height from gradient method
 
-    Note that function is slow and should be optimized
+    Note that function is quite slow and should be optimized
     """
 
     def calculateHmix_var(
@@ -115,7 +123,7 @@ def calc_from_gradient(
         var_profile,
         threshold,
         z_min,
-        altitude="height",
+        altitude=nom.ALTITUDE,
         time="sounding",
     ):
 
@@ -155,7 +163,7 @@ def calc_from_gradient(
             var_profile,
             threshold,
             z_min,
-            altitude="height",
+            altitude=altitude,
             time="sounding",
         )
 

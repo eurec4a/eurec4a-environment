@@ -1,9 +1,12 @@
 import numpy as np
 
 from ...constants import cp_d, g
+from ... import nomenclature as nom
 
 
-def find_LCL_Bolton(ds, temperature="T", rh="rh", altitude="height"):
+def find_LCL_Bolton(
+    ds, temperature=nom.TEMPERATURE, rh=nom.RELATIVE_HUMIDITY, altitude=nom.ALTITUDE
+):
     """
     Calculates distribution of LCL from RH and T at different vertical levels
     returns mean LCL from this distribution
@@ -28,20 +31,9 @@ def find_LCL_Bolton(ds, temperature="T", rh="rh", altitude="height"):
         mean_zlcl = np.mean(zlcl)
         return mean_zlcl
 
-    # Celsius to Kelvin
-    if ds[temperature].units == "C":
-        da_temperature = ds[temperature] + 273.15
-        da_temperature.attrs["units"] = "K"
-    else:
-        da_temperature = ds[temperature]
-    # RH from % to [0,1] value
-    if ds[rh].max().values > 2:
-        da_rh = ds[rh] / 100
-        da_rh.attrs["units"] = "1"
-    else:
-        da_rh = ds[rh]
-
-    da_altitude = ds[altitude]
+    da_temperature = nom.get_field(ds=ds, field_name=temperature, units="K")
+    da_rh = nom.get_field(ds=ds, field_name=rh, units="1")
+    da_altitude = nom.get_field(ds=ds, field_name=altitude, units="m")
 
     return _calc_LCL_Bolton(
         da_temperature=da_temperature, da_rh=da_rh, da_altitude=da_altitude
