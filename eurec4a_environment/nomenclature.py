@@ -46,6 +46,10 @@ ZONAL_WIND = "u"
 MERIDIONAL_WIND = "v"
 
 
+LATITUDE = "lat"
+LONGITUDE = "lon"
+
+
 CF_STANDARD_NAMES = {
     TEMPERATURE: "air_temperature",
     ALTITUDE: "geopotential_height",
@@ -56,6 +60,8 @@ CF_STANDARD_NAMES = {
     WIND_SPEED: "wind_speed",
     ZONAL_WIND: "eastward_wind",
     MERIDIONAL_WIND: "northward_wind",
+    LATITUDE: "latitude",
+    LONGITUDE: "longitude",
 }
 
 

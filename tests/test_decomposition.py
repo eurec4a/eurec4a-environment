@@ -21,10 +21,24 @@ def test_halo_circle_space_decomposition():
     # check for single set point
     assert circle.contains(lat=circle.lat, lon=circle.lon)
     # check for array of points
-    assert np.all(circle.contains(
-        lat=np.array([circle.lat + circle.r_degrees, circle.lat]),
-        lon=np.array([circle.lon, circle.lon + circle.r_degrees]),
-    ))
+    assert np.all(
+        circle.contains(
+            lat=np.array([circle.lat + circle.r_degrees, circle.lat]),
+            lon=np.array([circle.lon, circle.lon + circle.r_degrees]),
+        )
+    )
     assert not circle.contains(
         lat=circle.lat + circle.r_degrees, lon=circle.lon + circle.r_degrees
     )
+
+    ds_joanne = open_joanne_dataset()
+    # take mean per-sounding so we find if the mean lat/lon position is inside
+    # the cirlce or not (just to make things a bit faster)
+    ds_per_sounding = ds_joanne.mean(dim="height")
+    ds_joanne["inside_circle"] = space_decomposition.inside_halo_circle(
+        ds=ds_per_sounding
+    )
+
+    # there should be points both inside and outside the circle for the dropsondes
+    assert ds_joanne.where(ds_joanne.inside_circle, drop=True).count() > 0
+    assert ds_joanne.where(~ds_joanne.inside_circle, drop=True).count() > 0

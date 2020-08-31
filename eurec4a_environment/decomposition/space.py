@@ -1,6 +1,10 @@
 import cartopy.crs as ccrs
 import cartopy.geodesic as cgeod
 import numpy as np
+import xarray as xr
+
+
+from .. import nomenclature as nom, get_field
 
 
 class Circle:
@@ -17,11 +21,7 @@ class Circle:
         ortho = ccrs.Orthographic(central_longitude=self.lon, central_latitude=self.lat)
 
         # Compute the required radius in projection native coordinates:
-        phi1 = (
-            self.lat + self.r_degrees
-            if self.lat <= 0
-            else self.lat - self.r_degrees
-        )
+        phi1 = self.lat + self.r_degrees if self.lat <= 0 else self.lat - self.r_degrees
         _, y1 = ortho.transform_point(self.lon, phi1, ccrs.PlateCarree())
         return abs(y1)
 
@@ -44,7 +44,6 @@ class Circle:
         The points are assumed to be in spherical (lon, lat) coordinates
         """
         p_dist = self.distance_to_center(lat=lat, lon=lon)
-        print(p_dist, self.radius)
         return p_dist < self.radius
 
 
@@ -56,3 +55,16 @@ class HALOCircle(Circle):
 
     def __init__(self):
         super().__init__(lat=self.lat, lon=self.lon, r_degrees=self.r_degrees)
+
+
+def inside_halo_circle(ds, lat=nom.LATITUDE, lon=nom.LONGITUDE):
+    circle = HALOCircle()
+    da_lat = get_field(ds=ds, name=lat, units="degrees")
+    da_lon = get_field(ds=ds, name=lon, units="degrees")
+    is_inside = circle.contains(lat=da_lat, lon=da_lon)
+    return xr.DataArray(
+        is_inside,
+        coords=da_lat.coords,
+        dims=da_lat.dims,
+        attrs=dict(long_name="Inside HALO flight circle", units="1"),
+    )
