@@ -3,7 +3,7 @@ import xarray as xr
 from scipy.signal import find_peaks
 import statsmodels.api as sm
 
-from ... import nomenclature as nom
+from ... import get_field, nomenclature as nom
 
 
 def calc_peak_RH(
@@ -14,7 +14,7 @@ def calc_peak_RH(
     """
     ds_mixed_layer = ds.sel({altitude: slice(z_min, z_max)})
 
-    da_rh = nom.get_field(ds=ds_mixed_layer, field_name=rh, units="%")
+    da_rh = get_field(ds=ds_mixed_layer, name=rh, units="%")
     dims = list(ds.dims.keys())
     # drop the height coord
     del dims[dims.index(altitude)]
@@ -51,8 +51,8 @@ def calc_peakRH_linearize(
      Outputs:
          -- da: datarray containing h_peakRH_linfit
      """
-    da_rh = nom.get_field(ds=ds, field_name=rh, units="%")
-    da_alt = nom.get_field(ds=ds, field_name=altitude, units="m")
+    da_rh = get_field(ds=ds, name=rh, units="%")
+    da_alt = get_field(ds=ds, name=altitude, units="m")
 
     h_peakRH_linfit = np.zeros(len(da_rh))
 

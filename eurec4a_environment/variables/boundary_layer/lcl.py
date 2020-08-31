@@ -1,5 +1,6 @@
 import numpy as np
 
+from ... import get_field
 from ...constants import cp_d, g
 from ... import nomenclature as nom
 
@@ -31,9 +32,9 @@ def find_LCL_Bolton(
         mean_zlcl = np.mean(zlcl)
         return mean_zlcl
 
-    da_temperature = nom.get_field(ds=ds, field_name=temperature, units="K")
-    da_rh = nom.get_field(ds=ds, field_name=rh, units="1")
-    da_altitude = nom.get_field(ds=ds, field_name=altitude, units="m")
+    da_temperature = get_field(ds=ds, name=temperature, units="K")
+    da_rh = get_field(ds=ds, name=rh, units="1")
+    da_altitude = get_field(ds=ds, name=altitude, units="m")
 
     return _calc_LCL_Bolton(
         da_temperature=da_temperature, da_rh=da_rh, da_altitude=da_altitude

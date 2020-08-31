@@ -1,5 +1,6 @@
 import xarray as xr
 
+from ... import get_field
 from ... import nomenclature as nom
 
 
@@ -16,8 +17,8 @@ def find_inversion_height_grad_RH(
     """
 
     ds_lowertroposhere = ds.sel({altitude: slice(z_min, z_max)})
-    da_rh = nom.get_field(ds=ds_lowertroposhere, field_name=rh)
-    da_z = nom.get_field(ds=ds_lowertroposhere, field_name=altitude)
+    da_rh = get_field(ds=ds_lowertroposhere, name=rh)
+    da_z = get_field(ds=ds_lowertroposhere, name=altitude)
 
     if smoothing_win_size:
         RH = da_rh.rolling(
