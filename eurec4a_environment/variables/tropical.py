@@ -1,41 +1,45 @@
 import numpy as np
+import xarray as xr
 
-from ... import get_field
-from ...constants import cp_d, g
-from ... import nomenclature as nom
+from .. import get_field
+from ..constants import cp_d, g
+from .. import nomenclature as nom
+from .utils import apply_by_column
 
 
 def lower_tropospheric_stability(
-    ds, temperature=nom.TEMPERATURE, rh=nom.RELATIVE_HUMIDITY, altitude=nom.ALTITUDE
+    ds, pot_temperature=nom.POTENTIAL_TEMPERATURE, pressure=nom.PRESSURE,
+    vertical_coord=nom.ALTITUDE,
 ):
     """
+    Lower tropospheric stability as defined by Klein & Hartmann 1993 is the difference
+    in potential temperature between the surface and at 700hPa
 
+    NB: currently picks the level closest to 700hPa
+    TODO: add vertical linear interpolation for more accurate estimate
     """
+    if not pressure in ds.data_vars:
+        raise NotImplementedError("Pressure must be provided")
 
-    def _calc_LCL_Bolton(da_temperature, da_rh, da_altitude):
-        """
-        Returns lifting condensation level (LCL) [m] calculated according to
-        Bolton (1980).
-        Inputs: da_temperature is temperature in Kelvin
-                da_rh is relative humidity (0 - 1, dimensionless)
-        Output: LCL in meters
-        """
-        assert da_temperature.units == "K"
-        assert da_rh.units == "1"
-        assert da_altitude.units == "m"
+    def _calc_lts(ds_column):
+        # swap from vertical coord so we can index by pressure
+        ds_column = ds_column.swap_dims({ vertical_coord: nom.PRESSURE })
+        p_max = ds_column[nom.PRESSURE].max()
+        p_ref = 700.
+        theta_surf = ds_column.sel(p=p_max)[nom.POTENTIAL_TEMPERATURE]
+        theta_ref = ds_column.sel(p=p_ref, method="nearest")[nom.POTENTIAL_TEMPERATURE]
 
-        tlcl = 1.0 / ((1.0 / (da_temperature - 55.0)) - (np.log(da_rh) / 2840.0)) + 55.0
-        zlcl = da_altitude - (cp_d * (tlcl - da_temperature) / g)
-        mean_zlcl = np.mean(zlcl)
-        return mean_zlcl
+        return theta_ref - theta_surf
 
-    da_temperature = get_field(ds=ds, name=temperature, units="K")
-    da_rh = get_field(ds=ds, name=rh, units="1")
-    da_altitude = get_field(ds=ds, name=altitude, units="m")
+    da_theta = get_field(ds, name=pot_temperature, units="K")
+    da_p = get_field(ds, name=pressure, units="hPa")
 
-    return _calc_LCL_Bolton(
-        da_temperature=da_temperature, da_rh=da_rh, da_altitude=da_altitude
+    ds_derived = xr.merge([da_theta, da_p])
+    da_lst = apply_by_column(
+        ds=ds_derived, vertical_coord=vertical_coord, fn=_calc_lts
     )
-
-
-def lts()
+    da_lst.name = "d_theta__lts"
+    da_lts.attrs['units'] = 'K'
+    da_lts.attrs['long_name'] = "lower tropospheric stability"
+    da_lts.attrs['definition'] = "Klein & Hartmann 1993"
+    return da_lts
