@@ -17,6 +17,8 @@ def lower_tropospheric_stability(
 
     NB: currently picks the level closest to 700hPa
     TODO: add vertical linear interpolation for more accurate estimate
+
+    reference: https://www.jstor.org/stable/26198436
     """
     if not pressure in ds.data_vars:
         raise NotImplementedError("Pressure must be provided")
