@@ -18,20 +18,16 @@ def calc_density(
 ):
     # equation: rho = P/(Rd * Tv), where Tv = T(1 + mr/eps)/(1+mr)
 
-    pressure = get_field(ds=ds, name=pres, units="Pa")
-    temp_K = get_field(ds=ds, name=temp, units="K")
-    q = get_field(ds=ds, name=specific_humidity, units="g/kg")
+    da_p = get_field(ds=ds, name=pres, units="Pa")
+    da_temp = get_field(ds=ds, name=temp, units="K")
+    da_qv = get_field(ds=ds, name=specific_humidity, units="g/kg")
 
-    mixing_ratio = q / (1 - q)
+    da_rv = da_qv / (1 - da_qv)
 
-    density = (pressure) / (
-        Rd * (temp_K) * (1 + (mixing_ratio / eps)) / (1 + mixing_ratio)
+    da_rho = (da_p) / (
+        Rd * (da_temp) * (1 + (da_rv / eps)) / (1 + da_rv)
     )
-    density = density.transpose(transpose_coords=True)
+    da_rho.attrs["long_name"] = "density of air"
+    da_rho.attrs["units"] = "kg/m3"
 
-    dims = list(ds.dims.keys())
-    da = xr.DataArray(density, dims=dims, coords={d: ds[d] for d in dims})
-    da.attrs["long_name"] = "density of air"
-    da.attrs["units"] = "kg/m3"
-
-    return da
+    return da_rho
