@@ -1,6 +1,6 @@
 import numpy as np
 
-import eurec4a_environment.variables.tropical import tropical_variables
+import eurec4a_environment.variables.tropical as tropical_variables
 from eurec4a_environment import nomenclature as nom
 
 

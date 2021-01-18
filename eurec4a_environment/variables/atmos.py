@@ -1,4 +1,5 @@
 import numpy as np
+import xarray as xr
 
 from .. import get_field
 from ..constants import cp_d, Rd

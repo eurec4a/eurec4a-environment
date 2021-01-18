@@ -37,10 +37,10 @@ def lower_tropospheric_stability(
     da_p = get_field(ds, name=pressure, units="hPa")
 
     ds_derived = xr.merge([da_theta, da_p])
-    da_lst = apply_by_column(
+    da_lts = apply_by_column(
         ds=ds_derived, vertical_coord=vertical_coord, fn=_calc_lts
     )
-    da_lst.name = "d_theta__lts"
+    da_lts.name = "d_theta__lts"
     da_lts.attrs['units'] = 'K'
     da_lts.attrs['long_name'] = "lower tropospheric stability"
     da_lts.attrs['definition'] = "Klein & Hartmann 1993"
