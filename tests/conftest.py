@@ -44,7 +44,7 @@ def ds_isentropic_test_profiles():
     ds[nom.TEMPERATURE].attrs["long_name"] = "absolute temperature"
     ds[nom.TEMPERATURE].attrs["standard_name"] = nom.CF_STANDARD_NAMES[nom.TEMPERATURE]
 
-    ds[nom.RELATIVE_HUMIDITY] = 0.95 * xr.ones_like(ds.T)
+    ds[nom.RELATIVE_HUMIDITY] = 0.95 * xr.ones_like(ds[nom.TEMPERATURE])
     ds[nom.RELATIVE_HUMIDITY].attrs["units"] = "1"
     ds[nom.RELATIVE_HUMIDITY].attrs["long_name"] = "relative humidity"
     ds[nom.RELATIVE_HUMIDITY].attrs["standard_name"] = nom.CF_STANDARD_NAMES[
