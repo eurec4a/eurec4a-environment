@@ -1,9 +1,12 @@
 import xarray as xr
+
 try:
     import cfunits
+
     HAS_UDUNITS2 = True
 except FileNotFoundError:
     import warnings
+
     HAS_UDUNITS2 = False
 
 
@@ -45,6 +48,6 @@ def convert_units(da, units):
         attrs = dict(da.attrs)
         attrs["units"] = units
         da_converted = xr.DataArray(
-            values_converted, coords=da.coords, dims=da.dims, attrs=attrs
+            values_converted, coords=da.coords, dims=da.dims, attrs=attrs, name=da.name
         )
         return da_converted
