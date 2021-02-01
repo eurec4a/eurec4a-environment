@@ -8,7 +8,9 @@ from .utils import apply_by_column
 
 
 def lower_tropospheric_stability(
-    ds, pot_temperature=nom.POTENTIAL_TEMPERATURE, pressure=nom.PRESSURE,
+    ds,
+    pot_temperature=nom.POTENTIAL_TEMPERATURE,
+    pressure=nom.PRESSURE,
     vertical_coord=nom.ALTITUDE,
 ):
     """
@@ -20,14 +22,12 @@ def lower_tropospheric_stability(
 
     reference: https://www.jstor.org/stable/26198436
     """
-    if not pressure in ds.data_vars:
-        raise NotImplementedError("Pressure must be provided")
 
     def _calc_lts(ds_column):
         # swap from vertical coord so we can index by pressure
-        ds_column = ds_column.swap_dims({ vertical_coord: nom.PRESSURE })
+        ds_column = ds_column.swap_dims({vertical_coord: nom.PRESSURE})
         p_max = ds_column[nom.PRESSURE].max()
-        p_ref = 700.
+        p_ref = 700.0
         theta_surf = ds_column.sel(p=p_max)[nom.POTENTIAL_TEMPERATURE]
         theta_ref = ds_column.sel(p=p_ref, method="nearest")[nom.POTENTIAL_TEMPERATURE]
 
@@ -36,12 +36,15 @@ def lower_tropospheric_stability(
     da_theta = get_field(ds, name=pot_temperature, units="K")
     da_p = get_field(ds, name=pressure, units="hPa")
 
-    ds_derived = xr.merge([da_theta, da_p])
-    da_lts = apply_by_column(
-        ds=ds_derived, vertical_coord=vertical_coord, fn=_calc_lts
-    )
+    if pressure in ds.coords:
+        ds_derived = da_theta.to_dataset()
+        ds_derived = ds_derived.assign_coords(**{pressure: da_p})
+    else:
+        ds_derived = xr.merge([da_theta, da_p])
+
+    da_lts = apply_by_column(ds=ds_derived, vertical_coord=vertical_coord, fn=_calc_lts)
     da_lts.name = "d_theta__lts"
-    da_lts.attrs['units'] = 'K'
-    da_lts.attrs['long_name'] = "lower tropospheric stability"
-    da_lts.attrs['definition'] = "Klein & Hartmann 1993"
+    da_lts.attrs["units"] = "K"
+    da_lts.attrs["long_name"] = "lower tropospheric stability"
+    da_lts.attrs["definition"] = "Klein & Hartmann 1993"
     return da_lts
