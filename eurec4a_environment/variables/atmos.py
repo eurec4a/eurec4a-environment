@@ -1,7 +1,9 @@
 import xarray as xr
+import typhon.physics
+import numpy as np
 
 from .. import get_field
-from ..constants import cp_d, Rd, g, eps
+from ..constants import cp_d, Rd, g, eps, Lv, Rv
 from .. import nomenclature as nom
 from .utils import apply_by_column
 
@@ -137,3 +139,42 @@ def hydrostatic_pressure(
     )
 
     return da_pressure
+
+
+def saturation_mixing_ratio(ds, temperature=nom.TEMPERATURE, pressure=nom.PRESSURE):
+    """
+    Calculate saturation mixing ratio using routines in `typhon` library
+    """
+    da_T = get_field(ds=ds, name=temperature, units="K")
+    da_p = get_field(ds=ds, name=pressure, units="Pa")
+    pv_sat = typhon.physics.e_eq_mixed_mk(T=np.atleast_1d(da_T.values))[0]
+    da_qv_sat = (eps * pv_sat) / (da_p - (1.0 - eps) * pv_sat)
+    da_qv_sat.attrs["long_name"] = "saturation mixing ratio"
+    da_qv_sat.attrs["units"] = "kg/kg"
+    return da_qv_sat
+
+
+def moist_adiabatic_lapse_rate(ds, temperature=nom.TEMPERATURE, pressure=nom.PRESSURE):
+    """
+    Moist adiabatic lapse-rate as given in Wood & Bretherton 2006
+
+    TODO: for now the heat capacity for dry air is used, this should be fixed
+    """
+    T = get_field(ds=ds, name=temperature, units="K")
+    qv_sat = saturation_mixing_ratio(ds=ds, temperature=temperature, pressure=pressure)
+
+    cp = cp_d
+
+    dTdz_moist = (
+        g
+        / cp
+        * (
+            1
+            - (1 + Lv * qv_sat / (Rd * T))
+            / ((1 + Lv ** 2 * qv_sat) / (cp * Rv * T ** 2))
+        )
+    )
+
+    dTdz_moist.attrs["long_name"] = "moist adiabatic lapse-rate"
+    dTdz_moist.attrs["units"] = "K/m"
+    return dTdz_moist

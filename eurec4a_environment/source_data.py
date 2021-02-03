@@ -83,6 +83,8 @@ def open_joanne_dataset(level=3):
         # (height) coordinate
         ds[nom.ALTITUDE].attrs["units"] = "m"
         ds[nom.ALTITUDE].attrs["standard_name"] = "geopotential_height"
+        # this version is missing units on relative humidity
+        ds[nom.RELATIVE_HUMIDITY].attrs["units"] = "1"
     return ds.sortby("launch_time")
 
 
