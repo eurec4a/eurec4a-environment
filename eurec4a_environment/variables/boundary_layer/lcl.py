@@ -7,7 +7,10 @@ from ..utils import apply_by_column
 
 
 def find_LCL_Bolton(
-    ds, temperature=nom.TEMPERATURE, rh=nom.RELATIVE_HUMIDITY, altitude=nom.ALTITUDE,
+    ds,
+    temperature=nom.TEMPERATURE,
+    rh=nom.RELATIVE_HUMIDITY,
+    altitude=nom.ALTITUDE,
     vertical_coord=nom.ALTITUDE,
 ):
     """
