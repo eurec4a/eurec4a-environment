@@ -99,7 +99,9 @@ def test_eis_joanne_profile():
     )
     ds[LTS_name] = da_lts
 
-    da_eis = tropical_variables.estimated_inversion_strength(ds=ds, LCL=LCL_name, LTS=LTS_name)
+    da_eis = tropical_variables.estimated_inversion_strength(
+        ds=ds, LCL=LCL_name, LTS=LTS_name
+    )
 
     assert da_eis.units == "K"
     assert np.all(da_eis > 0.0)

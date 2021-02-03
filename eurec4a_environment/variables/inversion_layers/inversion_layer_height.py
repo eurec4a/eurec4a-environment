@@ -87,5 +87,3 @@ def calc_inversion_grad_RH_T(
     da.attrs["long_name"] = "inversion base height from RH and T gradient"
     da.attrs["units"] = "m"
     return da
-
-    

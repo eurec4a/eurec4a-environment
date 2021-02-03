@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import xarray as xr
 import matplotlib.dates as mdates
 import seaborn as sns
 
@@ -91,8 +90,10 @@ def plot_profile_1D(
     height_labels=None,
     **kwargs
 ):
-    """Plot a 1D profile plot of two variables and a height level 
-    input a 1D dataset (that is profiles e.g. of one timestep or sounding or a mean profile)
+    """
+    Plot a 1D profile plot of two variables and a height level input a 1D
+    dataset (that is profiles e.g. of one timestep or sounding or a mean
+    profile)
     """
 
     fig, ax1 = plt.subplots(figsize=(12, 12))

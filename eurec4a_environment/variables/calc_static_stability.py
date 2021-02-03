@@ -5,13 +5,16 @@ import xarray as xr
 
 
 def calc_static_stability(ds, pres="p", temp="T", theta="theta", altitude="height"):
+    """
+    Equation from:
+    https://www.ncl.ucar.edu/Document/Functions/Contributed/static_stability.shtml
 
-    """ Equation from: https://www.ncl.ucar.edu/Document/Functions/Contributed/static_stability.shtml
-        S = -(T/theta)*d(theta)/dp. From Bluestein (1992), pg 197, eqn 4.3.8
-        
-        Static stability measures the gravitational resistance of an atmosphere to vertical displacements. 
-        It results from fundamental buoyant adjustments, and so it is determined by the vertical stratification 
-        of density or potential temperature.
+    S = -(T/theta)*d(theta)/dp. From Bluestein (1992), pg 197, eqn 4.3.8
+
+    Static stability measures the gravitational resistance of an atmosphere to
+    vertical displacements.  It results from fundamental buoyant adjustments,
+    and so it is determined by the vertical stratification of density or
+    potential temperature.
     """
 
     # !! edit these lines based on units function !!

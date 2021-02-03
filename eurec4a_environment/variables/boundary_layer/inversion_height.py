@@ -1,5 +1,3 @@
-import xarray as xr
-
 from ... import get_field
 from ... import nomenclature as nom
 

@@ -5,8 +5,6 @@ try:
 
     HAS_UDUNITS2 = True
 except FileNotFoundError:
-    import warnings
-
     HAS_UDUNITS2 = False
 
 

@@ -3,6 +3,7 @@ import numpy as np
 from eurec4a_environment.variables import boundary_layer
 from eurec4a_environment.variables.boundary_layer import inversion_height
 from eurec4a_environment import nomenclature as nom
+import eurec4a_environment.source_data
 
 
 def test_LCL_Bolton(ds_isentropic_test_profiles):
@@ -44,7 +45,7 @@ def test_mixed_layer_height_gradient():
     assert np.all(da_gradient < 1500.0)
     assert da_gradient.units == "m"
 
-    
+
 def test_inversion_height_gradient_RH(ds_isentropic_test_profiles):
     ds = ds_isentropic_test_profiles.copy()
     z_INV = 2000.0

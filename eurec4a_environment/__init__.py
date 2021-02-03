@@ -37,7 +37,9 @@ def get_fields(ds, *names, **names_and_units):
     dataarrays = []
     coords = {}
 
-    all_fields = itertools.chain(names_and_units.items(), zip(names, [None] * len(names)))
+    all_fields = itertools.chain(
+        names_and_units.items(), zip(names, [None] * len(names))
+    )
 
     for (name, units) in all_fields:
         da = get_field(ds=ds, name=name, units=units)
