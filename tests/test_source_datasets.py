@@ -1,9 +1,10 @@
 import eurec4a_environment.source_data
+import eurec4a_environment.nomenclature as nom
 
 
 def test_download_joanne_level3():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
-    assert ds.height.count() > 0
+    assert ds[nom.ALTITUDE].count() > 0
     assert ds.sounding.count() > 0
 
 

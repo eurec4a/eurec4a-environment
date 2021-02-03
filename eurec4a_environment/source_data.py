@@ -8,6 +8,8 @@ import xarray as xr
 import yaml
 import intake
 
+from . import nomenclature as nom
+
 
 EUREC4A_INTAKE_CATALOG_URL = (
     "https://raw.githubusercontent.com/eurec4a/eurec4a-intake/master/catalog.yml"
@@ -75,7 +77,14 @@ def open_joanne_dataset(level=3):
     if not level == 3:
         raise NotImplementedError(level)
     cat = get_intake_catalog()
-    ds = cat.dropsondes.to_dask()
+    ds = cat.dropsondes.JOANNE.level3.to_dask()
+    if ds.attrs["JOANNE-version"] == "0.7.0+2.g4a878b3.dirty":
+        # this version is missing units and standard name on the vertical
+        # (height) coordinate
+        ds[nom.ALTITUDE].attrs["units"] = "m"
+        ds[nom.ALTITUDE].attrs["standard_name"] = "geopotential_height"
+        # this version is missing units on relative humidity
+        ds[nom.RELATIVE_HUMIDITY].attrs["units"] = "1"
     return ds.sortby("launch_time")
 
 
