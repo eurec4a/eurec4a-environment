@@ -57,7 +57,7 @@ def make_fixed_lapse_rate_dry_profile(
 
     # (multiplying by ds.timesteps is just a quick hack to get ds.T have shape
     # of (alt, timestep)
-    ds[nom.TEMPERATURE] = T0 - dTdz * ds[nom.ALTITUDE] + 0.0 * ds.timestep
+    ds[nom.TEMPERATURE] = T0 + dTdz * ds[nom.ALTITUDE] + 0.0 * ds.timestep
     ds[nom.TEMPERATURE].attrs["units"] = "K"
     ds[nom.TEMPERATURE].attrs["long_name"] = "absolute temperature"
     ds[nom.TEMPERATURE].attrs["standard_name"] = nom.CF_STANDARD_NAMES[nom.TEMPERATURE]
