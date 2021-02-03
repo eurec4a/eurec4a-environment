@@ -3,7 +3,10 @@ import xarray as xr
 from scipy.signal import find_peaks
 import statsmodels.api as sm
 
-from ... import get_field, nomenclature as nom
+from ... import get_field, get_fields, nomenclature as nom
+from ..utils import apply_by_column
+
+DEBUG = False
 
 
 def calc_peak_RH(
@@ -37,36 +40,45 @@ def calc_peakRH_linearize(
     z_max=1500.0,
     z_min_lin=50.0,
     z_max_lin=400.0,
+    vertical_coord=":altitude",
 ):
     """
-     Calculate maximum in relative humidity (RH) profile that minimizes difference between
-     observed RH profile and RH profile linearized around lower levels (i.e. 200-400m).
-     Assume moisture is well-mixed at these lower levels, such that RH would increase and
-     assume linear profile as an idealization
-     Inputs:
-         -- ds: dataset
-         -- altitude, rh, time: variable names
-         -- z_min and z_max: lower and upper bounds for mixed layer height
-         -- z_min_lin and z_max_lin: bounds for linearization of observed RH profile
-     Outputs:
-         -- da: datarray containing h_peakRH_linfit
-     """
-    da_rh = get_field(ds=ds, name=rh, units="%")
-    da_alt = get_field(ds=ds, name=altitude, units="m")
+    Calculate maximum in relative humidity (RH) profile that minimizes
+    difference between observed RH profile and RH profile linearized around
+    lower levels (i.e. 200-400m).  Assume moisture is well-mixed at these lower
+    levels, such that RH would increase and assume linear profile as an
+    idealization.
 
-    h_peakRH_linfit = np.zeros(len(da_rh))
+    Inputs:
+        - ds: dataset
+        - altitude, rh, time: variable names
+        - z_min and z_max: lower and upper bounds for mixed layer height
+        - z_min_lin and z_max_lin: bounds for linearization of observed RH profile
 
-    dz = int(da_alt.diff(dim=altitude)[1])  # dz=10m
+    Outputs:
+        - da: datarray containing h_peakRH_linfit
+    """
+    # if `vertical_coord` hasn't been changed we'll assume that the vertical
+    # coordinate has name of the altitude variable
+    if vertical_coord == ":altitude":
+        vertical_coord = altitude
 
-    mixed_layer = np.logical_and(da_alt >= z_min, da_alt <= z_max)
+    import matplotlib.pyplot as plt
 
-    ml_linfit = np.logical_and(
-        da_alt >= z_min_lin, da_alt <= z_max_lin
-    )  # for linearized RH profile
+    def _calc_mixed_layer_depth(ds_column):
+        da_alt = ds_column[altitude]
 
-    for i in range(len(ds[rh])):
+        mixed_layer = np.logical_and(da_alt >= z_min, da_alt <= z_max)
+        ml_linfit = np.logical_and(
+            da_alt >= z_min_lin, da_alt <= z_max_lin
+        )  # for linearized RH profile
 
-        rh_profile = ds[rh].isel({time: i}).interpolate_na(dim=altitude)
+        dz = int(da_alt.diff(dim=altitude)[1])  # dz=10m
+
+        rh_profile = ds_column[rh].interpolate_na(dim=altitude)
+
+        # fit a straight line to the relative humidity values in the
+        # "ml-linfit" region
         X_height = rh_profile[ml_linfit][altitude]
         X = sm.add_constant(X_height.values)  # add intercept
         model = sm.OLS(
@@ -79,6 +91,7 @@ def calc_peakRH_linearize(
         # add +X index from mixed layer (ml) lower bound (lb), divided by dz=10m
         add_to_index_ml_lb = int(z_min / dz)
         idx_peaks_RH = idx_peaks_RH_raw + add_to_index_ml_lb
+
         obs_RH_peaks = rh_profile[idx_peaks_RH]  # RH values at the local maxima
         linearized_RH_values = linearized_RH[
             idx_peaks_RH
@@ -86,19 +99,44 @@ def calc_peakRH_linearize(
         min_diff_RH = min(
             abs(obs_RH_peaks - linearized_RH_values)
         )  # find minimum RH difference between observed peaks and linearized profile
-        h_peakRH_linfit[i] = min_diff_RH[altitude]
 
-    # set 'anomalously' high values > z_max to nan
-    # ... somewhat arbitrary choice
-    h_peakRH_linfit[h_peakRH_linfit > z_max] = np.nan
+        h_peakRH_linfit = min_diff_RH[altitude]
 
-    dims = list(ds.dims.keys())
-    # drop the height coord
-    del dims[dims.index(altitude)]
-    da = xr.DataArray(h_peakRH_linfit, dims=dims, coords={d: ds[d] for d in dims})
-    da.attrs["long_name"] = "mixed layer height (from RH peak and linearization)"
-    da.attrs["units"] = "m"
-    return da
+        if DEBUG:
+            ds_column[rh].plot(y=altitude, label="raw profile")
+            rh_profile.plot(y=altitude, label="raw profile interpolated")
+            plt.plot(linearized_RH, da_alt, label="RH interpolation in linfit region")
+
+            rh_profile.isel({altitude: idx_peaks_RH}).plot(
+                marker="x", linestyle="--", label="interpolated profile peaks", y=altitude
+            )
+
+            plt.axhline(h_peakRH_linfit, label="h_peakRH_linfit")
+
+            plt.legend()
+            plt.show()
+
+        # set 'anomalously' high values > z_max to nan
+        # ... somewhat arbitrary choice
+        if h_peakRH_linfit > z_max:
+            h_peakRH_linfit = np.nan
+
+        import ipdb
+
+        ipdb.set_trace()
+
+        return h_peakRH_linfit
+
+    ds_subset = get_fields(ds=ds, **{rh: "%", altitude: "m"})
+    da_ml_depth = apply_by_column(
+        ds=ds_subset, vertical_coord=vertical_coord, fn=_calc_mixed_layer_depth
+    )
+
+    da_ml_depth.attrs[
+        "long_name"
+    ] = "mixed layer height (from RH peak and linearization)"
+    da_ml_depth.attrs["units"] = "m"
+    return da_ml_depth
 
 
 def calc_from_gradient(
