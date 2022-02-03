@@ -19,6 +19,7 @@ INSTALL_REQUIRES = [
     "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
     "ipfsspec",
     "msgpack",
+    "toolz",
 ]
 setup(
     name="eurec4a-environment",
