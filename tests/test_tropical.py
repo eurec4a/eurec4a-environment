@@ -87,7 +87,7 @@ def test_eis_isentropic_profile():
 
 def test_eis_joanne_profile():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
-    ds = ds.isel(sounding=slice(0, 10))
+    ds = ds.isel(sonde_id=slice(0, 10))
 
     LCL_name = bl_variables.lcl.find_LCL_Bolton.name
     da_lcl = bl_variables.lcl.find_LCL_Bolton(ds=ds)
