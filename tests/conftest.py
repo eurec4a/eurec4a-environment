@@ -12,17 +12,7 @@ from eurec4a_environment import nomenclature as nom
 
 @pytest.fixture
 def ds_joanne():
-    ds = eurec4a_environment.source_data.open_joanne_dataset()
-
-    # JOANNE dataset is renaming some variables, so while we have the
-    # version with old namings we'll just let this pass
-    # TODO: remove this mapping once we've updated the JOANNE dataset in the
-    # intake catalog
-    if ds.attrs["JOANNE-version"] == "0.5.7-alpha+0.g45fe69d.dirty":
-        ds = ds.rename(dict(T=nom.TEMPERATURE, height=nom.ALTITUDE))
-        ds.theta.attrs["standard_name"] = "air_potential_temperature"
-
-    return ds
+    return eurec4a_environment.source_data.open_joanne_dataset()
 
 
 @pytest.fixture
