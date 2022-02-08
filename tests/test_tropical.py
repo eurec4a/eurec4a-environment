@@ -60,7 +60,7 @@ def test_eis_isentropic_profile():
     ds[nom.RELATIVE_HUMIDITY] = 0.9 * xr.ones_like(ds[nom.TEMPERATURE]).where(
         ds[nom.ALTITUDE] < 500.0, 0.0
     )
-    ds[nom.RELATIVE_HUMIDITY].attrs["units"] = "1"
+    ds[nom.RELATIVE_HUMIDITY].attrs["units"] = ""
     ds[nom.RELATIVE_HUMIDITY].attrs["long_name"] = "relative humidity"
     ds[nom.RELATIVE_HUMIDITY].attrs["standard_name"] = nom.CF_STANDARD_NAMES[
         nom.RELATIVE_HUMIDITY
@@ -87,7 +87,7 @@ def test_eis_isentropic_profile():
 
 def test_eis_joanne_profile():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
-    ds = ds.isel(sounding=slice(0, 10))
+    ds = ds.isel(sonde_id=slice(0, 10))
 
     LCL_name = bl_variables.lcl.find_LCL_Bolton.name
     da_lcl = bl_variables.lcl.find_LCL_Bolton(ds=ds)
