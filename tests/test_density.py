@@ -8,7 +8,8 @@ import eurec4a_environment.source_data
 
 def test_density_calculation():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
-    ds = ds.isel(sounding=slice(0, 10))
+
+    ds = ds.isel(sonde_id=slice(0, 10))
     da_density = atmos.density(ds)
     # check that we get some sensible numbers out for the density
     assert da_density.units == "kg/m3"

@@ -32,7 +32,7 @@ def find_LCL_Bolton(
         da_rh = ds_column[rh]
         da_altitude = ds_column[altitude]
         assert da_temperature.units == "K"
-        assert da_rh.units == "1"
+        assert da_rh.units == ""
         assert da_altitude.units == "m"
 
         tlcl = 1.0 / ((1.0 / (da_temperature - 55.0)) - (np.log(da_rh) / 2840.0)) + 55.0
@@ -40,7 +40,7 @@ def find_LCL_Bolton(
         mean_zlcl = np.mean(zlcl)
         return mean_zlcl
 
-    ds_selected = get_fields(ds, **{temperature: "K", rh: "1", altitude: "m"})
+    ds_selected = get_fields(ds, **{temperature: "K", rh: "", altitude: "m"})
 
     da_LCL = apply_by_column(
         ds=ds_selected, fn=_calc_LCL_Bolton, vertical_coord=vertical_coord

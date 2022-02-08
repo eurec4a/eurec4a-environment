@@ -33,7 +33,7 @@ def calc_peakRH_linearize(
     ds,
     altitude=nom.ALTITUDE,
     rh=nom.RELATIVE_HUMIDITY,
-    time_dim="sounding",
+    time_dim="sonde_id",
     z_min=200.0,
     z_max=1500.0,
     z_min_lin=50.0,
@@ -101,7 +101,7 @@ def calc_peakRH_linearize(
 
 
 def calc_from_gradient(
-    ds, var, threshold, z_min=200, altitude=nom.ALTITUDE, time="sounding"
+    ds, var, threshold, z_min=200, altitude=nom.ALTITUDE, time="sonde_id"
 ):
     """
     Find mixed layer height as layer over which x(z+1) - x(z) < threshold
@@ -124,7 +124,7 @@ def calc_from_gradient(
         threshold,
         z_min,
         altitude=nom.ALTITUDE,
-        time="sounding",
+        time="sonde_id",
     ):
 
         var_diff = 0
@@ -164,7 +164,7 @@ def calc_from_gradient(
             threshold,
             z_min,
             altitude=altitude,
-            time="sounding",
+            time="sonde_id",
         )
 
     dims = list(ds.dims.keys())
