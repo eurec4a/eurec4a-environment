@@ -78,6 +78,7 @@ def open_joanne_dataset(level=3):
         raise NotImplementedError(level)
     cat = get_intake_catalog()
     ds = cat.dropsondes.JOANNE.level3.to_dask()
+
     # the version attribute changed name `JOANNE-version` -> `JOANNE_version`
     if "JOANNE-version" in ds.attrs:
         joanne_version = ds.attrs["JOANNE-version"]
@@ -91,6 +92,7 @@ def open_joanne_dataset(level=3):
         ds[nom.ALTITUDE].attrs["standard_name"] = "geopotential_height"
         # this version is missing units on relative humidity
         ds[nom.RELATIVE_HUMIDITY].attrs["units"] = "1"
+
     return ds.sortby("launch_time")
 
 

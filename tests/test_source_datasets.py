@@ -5,7 +5,7 @@ import eurec4a_environment.nomenclature as nom
 def test_download_joanne_level3():
     ds = eurec4a_environment.source_data.open_joanne_dataset()
     assert ds[nom.ALTITUDE].count() > 0
-    assert ds.sounding.count() > 0
+    assert ds.sonde_id.count() > 0
 
 
 def test_download_halo_flight_segments():

@@ -165,14 +165,8 @@ def moist_adiabatic_lapse_rate(ds, temperature=nom.TEMPERATURE, pressure=nom.PRE
 
     cp = cp_d
 
-    dTdz_moist = (
-        g
-        / cp
-        * (
-            1
-            - (1 + Lv * qv_sat / (Rd * T))
-            / ((1 + Lv ** 2 * qv_sat) / (cp * Rv * T ** 2))
-        )
+    dTdz_moist = (g / cp) * (
+        (1 + (Lv * qv_sat) / (Rd * T)) / (1 + (Lv ** 2 * qv_sat) / (cp * Rv * T ** 2))
     )
 
     dTdz_moist.attrs["long_name"] = "moist adiabatic lapse-rate"
