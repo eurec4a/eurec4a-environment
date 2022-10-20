@@ -18,6 +18,8 @@ INSTALL_REQUIRES = [
     "cfunits",
     "intake-xarray",
     "ipfsspec",
+    "msgpack",
+    "toolz",
 ]
 setup(
     name="eurec4a-environment",
