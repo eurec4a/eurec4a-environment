@@ -16,7 +16,7 @@ INSTALL_REQUIRES = [
     "requests",
     "aiohttp",
     "cfunits",
-    "intake-xarray @ git+https://github.com/leifdenby/intake-xarray#egg=intake-xarray",
+    "intake-xarray",
     "ipfsspec",
     "msgpack",
     "toolz",
