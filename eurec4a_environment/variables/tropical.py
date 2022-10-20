@@ -128,6 +128,10 @@ def estimated_inversion_strength(
     else:
         ds_derived[da_p.name] = da_p
 
+    # this will happend when `altitude != vertical_coord`
+    if not altitude in ds_derived:
+        ds_derived[altitude] = ds[altitude]
+
     da_eis = apply_by_column(ds=ds_derived, vertical_coord=vertical_coord, fn=_calc_eis)
     da_eis.name = "d_theta__eis"
     da_eis.attrs["units"] = "K"
