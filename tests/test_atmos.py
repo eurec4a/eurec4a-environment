@@ -6,7 +6,7 @@ import numpy as np
 
 from eurec4a_environment import nomenclature as nom
 from eurec4a_environment.variables import atmos
-from reference_profiles import make_fixed_lapse_rate_dry_profile
+from .reference_profiles import make_fixed_lapse_rate_dry_profile
 
 
 def test_hydrostatic_pressure():

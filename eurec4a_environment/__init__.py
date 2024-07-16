@@ -2,13 +2,16 @@ import itertools
 
 import xarray as xr
 
-from ._version import get_versions
 from .nomenclature import get_field_by_name
 from .unit import convert_units
+from importlib.metadata import version as _version
 
-__version__ = get_versions()["version"]
-del get_versions
-
+try:
+    __version__ = _version(__name__)
+except Exception:
+    # Local copy or not installed with setuptools.
+    # Disable minimum version checks on downstream libraries.
+    __version__ = "9999"
 
 def get_field(ds, name, units=None):
     """

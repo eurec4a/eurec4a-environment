@@ -1,0 +1,47 @@
+[project]
+name = "eurec4a-environment"
+version = "0.0.1"
+description = "tools for characterising the atmospheric environment during EUREC4A"
+authors = [
+    {name = "Leif Denby", email = "lcd@dmi.dk"},
+]
+dependencies = [
+    "aiohttp",
+    "cfunits",
+    "fsspec>=0.7.4",
+    "intake",
+    "intake-xarray",
+    "ipfsspec",
+    "msgpack",
+    "netcdf4",
+    "pydap",
+    "requests",
+    "s3fs",
+    "statsmodels",
+    "toolz",
+    "tqdm",
+    "typhon",
+    "xarray",
+    "zarr",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+maintainers = [
+    {name = "Leif Denby", email = "lcd@dmi.dk"},
+]
+
+[project.urls]
+Homepage = "https://github.com/eurec4a/eurec4a-environment"
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=8.2.2",
+]

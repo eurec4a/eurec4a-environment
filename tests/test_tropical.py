@@ -8,7 +8,7 @@ from eurec4a_environment.variables import atmos
 from eurec4a_environment.constants import g, cp_d
 import eurec4a_environment.source_data
 
-from reference_profiles import make_fixed_lapse_rate_dry_profile, make_pressure_grid
+from .reference_profiles import make_fixed_lapse_rate_dry_profile, make_pressure_grid
 
 
 def test_lts_isentropic_profile():

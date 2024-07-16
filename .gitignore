@@ -5,3 +5,5 @@
 data/
 *.egg-info/
 .ipynb_checkpoints/
+
+.pdm-python
